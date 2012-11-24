@@ -2,14 +2,14 @@
 .game {
     position: relative;
     width: 966px;
-    height: 666px;
+    height: 706px;
 }
 
 .map {
     position: absolute;
     width: 666px;
     height: 666px;
-    top: 0px;
+    top: 40px;
     left: 0px;
 }
 
@@ -17,8 +17,17 @@
     position: absolute;
     left: 666px;
     width: 300px;
-    top: 0px;
+    top: 40px;
     height: 666px;
+}
+
+.top_view {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    height: 40px;
+    width: 100%;
+    overflow: hidden;
 }
 
 /* UNITS */
@@ -137,4 +146,17 @@
 
 .unit_item.selected .unit_item_hover {
     border: 2px solid black;
+}
+
+/* TOP VIEW */
+.top_view .player_name, .top_view .player_power {
+    float: left;
+}
+
+.top_view .player_power {
+    margin-left: 20px;
+}
+
+.top_view .player_round {
+    float: right;
 }

@@ -5,7 +5,7 @@ GroundUnit = new Class({
         this.category = 'ground';
     },
     canMove: function(new_position) {
-        if (!this.checkRooms(this.position ,this.new_position)) {
+        if (!this.checkRooms(this.position ,new_position)) {
             return false;
         }
         return this.parent.canMove(new_position);

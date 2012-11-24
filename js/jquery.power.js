@@ -8,7 +8,14 @@ $.widget("power.power", {
             2: 'cow',
             3: 'pig',
             4: 'rabbit'
-        }
+        },
+        playerNames: {
+            1: 'Player 1',
+            2: 'Player 2',
+            3: 'Player 3',
+            4: 'Player 4'
+        },
+        nbPlayer: 4
     },
     instances: {
         map: {
@@ -16,20 +23,56 @@ $.widget("power.power", {
             grid: null,
             gridItems: {}
         },
-        mainView: null
+        topView: null
     },
     unitsSelected: {
     },
+    playerSelected: 1,
 
     _create: function() {
         this.instances.map.main = $('<div class="map"></div>');
         this.instances.mainView = $('<div class="main_view"></div>');
+        this.instances.topView = $('<div class="top_view"></div>');
 
         this.instances.map.main.appendTo(this.element);
         this.instances.mainView.appendTo(this.element);
+        this.instances.topView.appendTo(this.element);
 
         this._initializeMap();
+        this.refresh();
+    },
+
+    refresh: function() {
         this._refreshMap();
+        this._refreshTopView();
+    },
+
+    _refreshTopView: function() {
+        var self = this;
+        this.instances.topView.html('');
+        var $playerName = $('<div class="player_name"></div>');
+        var $playerPower = $('<div class="player_power"></div>');
+        var $playerRound = $('<div class="player_round"></div>');
+        var $button = $('<input type="button" />');
+
+        $playerName.appendTo(this.instances.topView);
+        $playerPower.appendTo(this.instances.topView);
+        $playerRound.appendTo(this.instances.topView);
+
+        var playerName = this.options.playerNames[this.playerSelected];
+        $playerName.text(strtr('Player playing: {playerName}', {playerName: playerName}));
+        $playerPower.text(strtr('{power} power', {power: 10}));
+        $playerRound.append($button);
+        $button.val('Next');
+        $button.click(function() {
+            if (self.playerSelected == self.options.nbPlayer) {
+                //@todo: next round
+                self.playerSelected = 1;
+            } else {
+                self.playerSelected++;
+            }
+            self.refresh();
+        });
     },
 
     _initializeMap: function() {
