@@ -5,5 +5,7 @@ Soldier = new Class({
         this.type = 'soldier';
         this.power = 2;
         this.movement = 2;
+        this.evolution = 'Regiment';
     }
 });
+Soldier.cost = 2;

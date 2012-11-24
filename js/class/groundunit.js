@@ -5,6 +5,7 @@ GroundUnit = new Class({
         this.category = 'ground';
     },
     canMove: function(new_position) {
+        // Ground unit can't move outside of their current area (room)
         if (!this.checkRooms(this.position ,this.new_position)) {
             return false;
         }
