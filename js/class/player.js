@@ -1,5 +1,5 @@
 Player = new Class({
-    initialize : function(id, name, hq){
+    initialize : function(id, name, hq) {
         this.id = id;
         this.name = name;
         this.hq = hq;
@@ -17,128 +17,128 @@ Player = new Class({
     canPlanify : function() {
         return this.planifications.length < 5;
     },
+    removeConflictingPlanifications : function() {
+        for (var i=0 ; i<this.planifications.length ; i++) {
+            if (!this.planifications[i].isAuthorised()) {
+                this.planifications.splice(i, 1);
+                i--;
+            }
+        }
+    },
+    addPlanification: function(planification) {
+        planification.player = this;
+        // No conflict : can't add more than 5 notifications
+        if (!this.canPlanify()) {
+            return false;
+        }
+        this.planifications.push(planification);
+        this.removeConflictingPlanifications();
+    },
+    replacePlanification: function(index, planification) {
+        planification.player = this;
+        this.planifications.splice(index, 1, planification);
+        this.removeConflictingPlanifications();
+    },
+    cancelPlanification: function(index) {
+        this.planifications.splice(index, i);
+        this.removeConflictingPlanifications();
+    },
     resolvePlanifications : function() {
-        var self = this;
         this.planifications.forEach(function(planification) {
-            var action = planification.shift();
-            self[action].apply(self, planification);
+            planification.resolve();
         });
         this.planifications = [];
     },
 
     // MOVE
-    canMove: function(unit, where) {
-        // @todo check whether the unit has already moved in a previous planifications
-        return unit.canMove(where);
-    },
     planifyMove : function(unit, where) {
-        if (!this.canPlanify() || !this.canMove(unit, where)) {
-            console.log("Can't move", !this.canPlanify(), !this.canMove(unit, where))
-            return false;
+        var planification = new PlanificationMove(unit, where);
+        var conflicting = -1;
+        for (var i=0 ; i<this.planifications.length ; i++) {
+            var existing = this.planifications[i];
+            if (instanceOf(existing, PlanificationMove) && existing.unit.id == unit.id) {
+                conflicting = i;
+            }
         }
-        this.planifications.push(['resolveMove', unit, where]);
-        return true;
-    },
-    resolveMove : function(unit, where) {
-        return unit.moveTo(where);
+        if (conflicting >= 0) {
+            // Cancel if destination is the current position
+            if (unit.position.x == where.x && unit.position.y == where.y) {
+                this.cancelPlanification(conflicting);
+            } else {
+                this.replacePlanification(index, planification);
+            }
+        } else {
+            this.addPlanification(planification, conflicting);
+        }
     },
 
     // FUSION
-    canFusion: function(unit) {
-
-        var fusionType = unit.type;
-        // @todo retrieve units position after planifications
-        var units = Game.getUnitsOnCell(unit.position);
-        var remaining = 3; // How many units of the same type we need for the fusion
-
-        units.forEach(function(unit) {
-            if (unit.type == fusionType && remaining > 0) {
-                remaining--;
-            }
-        });
-        return remaining == 0;
-    },
     planifyFusion : function(unit) {
-        if (!this.canPlanify() || !this.canFusion(unit)) {
-            return false;
-        }
-        this.planifications.push(['resolveFusion', unit]);
-        return true;
-    },
-    resolveFusion : function(unit) {
-        var fusionPosition = unit.position;
-        var fusionType = unit.type;
-        var evolution = unit.evolution;
-
-        var units = Game.getUnitsOnCell(fusionPosition);
-        var remaining = 3;
-
-        units.forEach(function(unit) {
-            if (unit.type == fusionType && remaining > 0) {
-                remaining--;
-                unit.remove();
-            }
-        });
-        this.createUnit(evolution, fusionPosition);
-        return true;
+        this.addPlanification(new PlanificationFusion(unit));
     },
 
     // MISSILE
-    canMegaMissile: function(units) {
-
-        // @todo Check all units have the same position (including the previous planifications)
-        // @todo Check if unit has moved or have arrived
-        var neededPower = 100;
-        units.forEach(function(unit) {
-            if (neededPower > 0) {
-                neededPower -= unit.power;
-            }
-        });
-        return neededPower <= 0;
-    },
-    planifyMissile : function(units) {
-        if (!this.canPlanify() || !this.canMissile(units)) {
-            return false;
-        }
-        this.planifications.push(['resolveMissile', units]);
-        return true;
-    },
-    resolveMissile : function(units) {
-        var fusionPosition = units[0].position;
-        var neededPower = 100;
-
-        units.forEach(function(unit) {
-            if (neededPower > 0) {
-                neededPower -= unit.power;
-                unit.remove();
-            }
-        });
-        this.createUnit('Missile', fusionPosition);
-        return true;
+    planifyMissile : function(position, units) {
+        this.addPlanification(new PlanificationMissile(position, units));
     },
 
     // BUY
-    canBuy: function(unitType) {
-        var availableGold = this.gold;
-        // Check previous buyings
-        this.planifications.foreach(function(planification) {
-            if (planification[0] == 'buy') {
-                availableGold -= window[planification[1]]['cost'];
+    planifyBuy : function(unitType) {
+        this.addPlanification(new PlanificationBuy(unitType));
+    },
+
+    getUnitsLeavingCell : function(position) {
+        var units = [];
+        this.planifications.forEach(function(p) {
+            if (instanceOf(p, PlanificationMove) && p.unit.position.x == position.x && p.unit.position.y == position.y) {
+                units.push(p.unit);
+            }
+            if (instanceOf(p, PlanificationFusion) || instanceOf(p, PlanificationMissile)) {
+                p.involved.forEach(function(unit) {
+                    units.push(unit);
+                });
             }
         });
-        return window[unitType]['cost'] <= availableGold;
+        return units;
     },
-    planifyBuy : function(unitType) {
-        if (!this.canPlanify() || !this.canBuy(unitType)) {
-            return false;
-        }
-        this.planifications.push(['resolveBuy', unitType]);
-        return true;
+
+    getUnitsIncomingCell : function(position) {
+        var units = [];
+        this.planifications.forEach(function(p) {
+            if (instanceOf(p, PlanificationMove) && p.where.x == position.x && p.where.y == position.y) {
+                units.push(p.unit);
+            }
+        });
+        return units;
     },
-    resolveBuy : function(unitType) {
-        this.createUnit(unitType, this.hq);
-        this.gold -= window[unitType]['cost'];
-        return true;
+
+    getUnitsAvailableOnCell : function(position) {
+        var units = this.getUnitsOnCellByState(position);
+        return units.staying.combine(units.incoming);
+    },
+
+    getUnitsOnCellByState: function(position) {
+        var leaving = this.getUnitsLeavingCell(position);
+        var incoming = this.getUnitsIncomingCell(position);
+        var movingIds = [];
+        leaving.forEach(function(unit) {
+            movingIds.push(unit.id);
+        });
+        incoming.forEach(function(unit) {
+            movingIds.push(unit.id);
+        });
+        var self = this;
+        var staying = [];
+        this.units.forEach(function(unit) {
+            if (unit.position.x == position.x && unit.position.y == position.y) {
+                staying.push(unit);
+            }
+        });
+        return {
+            'staying' : staying,
+            'incoming' : incoming,
+            'leaving' : leaving
+        };
     }
 });
 
