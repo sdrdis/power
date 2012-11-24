@@ -1,9 +1,9 @@
-Tank = new Class({
+Assault = new Class({
     Extends: GroundUnit,
     initialize: function(position) {
         this.parent(position);
-        this.type = 'tank';
-        this.power = 3;
+        this.type = 'assault';
+        this.power = 30;
         this.movement = 3;
     }
 });

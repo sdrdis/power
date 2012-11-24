@@ -7,9 +7,9 @@ Game = new new Class({
         this.map = new Map();
         var starting_positions = {
             1: {x: 0, y: 0},
-            2: {x: 0, y: this.map.width - 1},
-            3: {x: this.map.height - 1, y: 0},
-            4: {x: this.map.height - 1, y: this.map.width - 1}
+            2: {x: 0, y: this.map.height - 1},
+            3: {x: this.map.width - 1, y: 0},
+            4: {x: this.map.width - 1, y: this.map.height - 1}
         };
         for (var i=1; i<=playerCount ; i++) {
             var player = new Player(i, 'Player ' + i, starting_positions[i]);
@@ -19,14 +19,16 @@ Game = new new Class({
             player.createUnit('Tank');
             player.createUnit('JetFighter');
             player.createUnit('JetFighter');
+            player.createUnit('Destroyer');
+            player.createUnit('Destroyer');
             this.players.push(player);
         }
     },
     getUnitsOnMap: function() {
         var result = [];
         var self = this;
-        this.map.grid.forEach(function(row, x) {
-            row.forEach(function(cell, y) {
+        this.map.grid.forEach(function(row, y) {
+            row.forEach(function(cell, x) {
                 var position = {x: x, y: y};
                 var units = self.getUnitsOnCell(position);
                 if (units.length > 0) {
