@@ -133,6 +133,23 @@
 }
 
 
+.battlecruiser.pig {
+  background: url(../images/units/pig/battlecruiser.png);
+}
+
+.battlecruiser.cow {
+  background: url(../images/units/cow/battlecruiser.png);
+}
+
+.battlecruiser.chicken {
+  background: url(../images/units/chicken/battlecruiser.png);
+}
+
+.battlecruiser.rabbit {
+  background: url(../images/units/rabbit/battlecruiser.png);
+}
+
+
 /* MAP */
 .map {
     background: url(../images/map.jpg);
