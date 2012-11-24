@@ -99,6 +99,40 @@
 }
 
 
+.regiment.pig {
+  background: url(../images/units/pig/regiment.png);
+}
+
+.regiment.cow {
+  background: url(../images/units/cow/regiment.png);
+}
+
+.regiment.chicken {
+  background: url(../images/units/chicken/regiment.png);
+}
+
+.regiment.rabbit {
+  background: url(../images/units/rabbit/regiment.png);
+}
+
+
+.jetbomber.pig {
+  background: url(../images/units/pig/jetbomber.png);
+}
+
+.jetbomber.cow {
+  background: url(../images/units/cow/jetbomber.png);
+}
+
+.jetbomber.chicken {
+  background: url(../images/units/chicken/jetbomber.png);
+}
+
+.jetbomber.rabbit {
+  background: url(../images/units/rabbit/jetbomber.png);
+}
+
+
 /* MAP */
 .map {
     background: url(../images/map.jpg);
