@@ -2,7 +2,21 @@ $.widget("power.power", {
     options: {
         width: 9,
         height: 9,
-        map: {}
+        map: {
+            units: [
+                {
+                    position: {x: 1, y: 1},
+                    list: [
+                        {
+                            type: 'soldier'
+                        },
+                        {
+                            type: 'soldier'
+                        }
+                    ]
+                }
+            ]
+        }
     },
     instances: {
         map: {
@@ -81,37 +95,23 @@ $.widget("power.power", {
 
     _refreshMap: function() {
         this.instances.map.grid.find('.grid_item').html('');
-        var units = {
-            1: {
-                1: [
-                    {
-                        type: 'soldier'
-                    },
-                    {
-                        type: 'soldier'
-                    },
-                    {
-                        type: 'tank'
-                    }
-                ]
-            }
-        };
 
-        for (var x in units) {
-            for (var y in units[x]) {
-                var unitsList = units[x][y];
-                var unitDisplayClass = 'unit_display_' + Math.ceil(Math.sqrt(unitsList.length));
-                this.instances.map.gridItems[x][y]
-                    .removeClass('unit_display_1')
-                    .removeClass('unit_display_2')
-                    .removeClass('unit_display_3')
-                    .addClass(unitDisplayClass);
-                for (var i = 0; i < unitsList.length; i++) {
-                    var unit = unitsList[i];
-                    var unitType = unit.type; //@todo temporary
-                    var $unit = $('<div class="unit"></div>').addClass(unitType);
-                    $unit.appendTo(this.instances.map.gridItems[x][y]);
-                }
+        var units = this.options.map.units; //@todo temporary
+
+        for (var i = 0; i < units.length; i++) {
+            var position = units[i].position;
+            var unitsList = units[i].list;
+            var unitDisplayClass = 'unit_display_' + Math.ceil(Math.sqrt(unitsList.length));
+            this.instances.map.gridItems[position.x][position.y]
+                .removeClass('unit_display_1')
+                .removeClass('unit_display_2')
+                .removeClass('unit_display_3')
+                .addClass(unitDisplayClass);
+            for (var i = 0; i < unitsList.length; i++) {
+                var unit = unitsList[i];
+                var unitType = unit.type; //@todo temporary
+                var $unit = $('<div class="unit"></div>').addClass(unitType);
+                $unit.appendTo(this.instances.map.gridItems[position.x][position.y]);
             }
         }
     },
@@ -122,7 +122,19 @@ $.widget("power.power", {
         $gridItem.addClass('selected');
         this._trigger('selectGrid', {position: position});
 
-        this.instances.mainView.text('Position: [' + position.x + ', ' + position.y + ']');
+        this.instances.mainView.html('');
+        var $gridItemView = $('<div class="grid_item_view"></div>');
+        var $position = $('<div class="position"></div>');
+
+        $position.appendTo($gridItemView);
+        $gridItemView.appendTo(this.instances.mainView);
+
+        $position.text(strtr('Cell selected: {x}, {y}', position));
+
+
+
+
+        //.text('Position: [' + position.x + ', ' + position.y + ']');
     },
 
     _trigger: function(name, params) {
