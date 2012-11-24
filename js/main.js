@@ -1,5 +1,6 @@
 $(document).ready(function() {
-    Game.start(4);
+    Game.createPlayers(4);
+    Game.createStartingUnits();
 
     $('.game').power({
         game: Game

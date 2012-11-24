@@ -47,17 +47,57 @@
     background: url(../images/units/rabbit/soldier.png);
 }
 
-.tank {
-    background-color: blue;
+
+.tank.pig {
+  background: url(../images/units/pig/tank.png);
 }
 
-.jetfighter {
-    background-color: purple;
+.tank.cow {
+  background: url(../images/units/cow/tank.png);
 }
 
-.destroyer {
-    background-color: white;
+.tank.chicken {
+  background: url(../images/units/chicken/tank.png);
 }
+
+.tank.rabbit {
+  background: url(../images/units/rabbit/tank.png);
+}
+
+
+.jetfighter.pig {
+  background: url(../images/units/pig/jetfighter.png);
+}
+
+.jetfighter.cow {
+  background: url(../images/units/cow/jetfighter.png);
+}
+
+.jetfighter.chicken {
+  background: url(../images/units/chicken/jetfighter.png);
+}
+
+.jetfighter.rabbit {
+  background: url(../images/units/rabbit/jetfighter.png);
+}
+
+
+.destroyer.pig {
+  background: url(../images/units/pig/destroyer.png);
+}
+
+.destroyer.cow {
+  background: url(../images/units/cow/destroyer.png);
+}
+
+.destroyer.chicken {
+  background: url(../images/units/chicken/destroyer.png);
+}
+
+.destroyer.rabbit {
+  background: url(../images/units/rabbit/destroyer.png);
+}
+
 
 /* MAP */
 .map {
@@ -113,6 +153,16 @@
 .unit_display_1 .unit {
     width: 100%;
     height: 100%;
+}
+
+.unit_display_1.bigger_horizontal .unit {
+    width: 33.33333333%;
+    margin-left: 33.33333333%;
+}
+
+.unit_display_1.bigger_vertical .unit {
+    height: 33.33333333%;
+    margin-top: 100%;
 }
 
 .unit_display_2 .unit {

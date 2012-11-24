@@ -30,8 +30,15 @@ $.widget("power.power", {
     unitsSelected: {
     },
     playerSelected: 1,
+    players: {},
+    preSelectedUnit: null,
 
     _create: function() {
+        var players = this.options.game.players;
+        for (var i = 0; i < players.length; i++) {
+            this.players[players[i].id] = players[i];
+        }
+
         this.instances.map.main = $('<div class="map"></div>');
         this.instances.mainView = $('<div class="main_view"></div>');
         this.instances.topView = $('<div class="top_view"></div>');
@@ -47,6 +54,17 @@ $.widget("power.power", {
     refresh: function() {
         this._refreshMap();
         this._refreshTopView();
+        this._refreshDrawZone();
+    },
+
+    _refreshDrawZone: function() {
+        this.instances.map.drawZone.drawZone('clear');
+        for (var i = 0; i < this.players[this.playerSelected].planifications.length; i++) {
+            var planification = this.players[this.playerSelected].planifications[i];
+            if (planification[0] == 'resolveMove') {
+                this._drawMovement(planification[1].position, planification[2], '#00FF00', false);
+            }
+        }
     },
 
     _refreshTopView: function() {
@@ -63,12 +81,12 @@ $.widget("power.power", {
 
         var playerName = this.options.playerNames[this.playerSelected];
         $playerName.text(strtr('Player playing: {playerName}', {playerName: playerName}));
-        $playerPower.text(strtr('{power} power', {power: 10}));
+        $playerPower.text(strtr('{power} power', {power: this.players[this.playerSelected].coins}));
         $playerRound.append($button);
         $button.val('Next');
         $button.click(function() {
             if (self.playerSelected == self.options.nbPlayer) {
-                //@todo: next round
+                self.options.game.nextRound();
                 self.playerSelected = 1;
             } else {
                 self.playerSelected++;
@@ -149,15 +167,7 @@ $.widget("power.power", {
                         positionFrom = self.unitsSelected[key].position;
                     }
                     if (positionFrom) {
-                        var $gridFrom = self.instances.map.gridItems[positionFrom.x][positionFrom.y];
-                        var pixelPositionFrom = $gridFrom.position();
-                        var pixelPositionTo = $this.position();
-                        var decalXFrom = $gridFrom.width() / 2 + parseInt($gridFrom.css('margin-left'));
-                        var decalYFrom = $gridFrom.height() / 2 + parseInt($gridFrom.css('margin-top'));
-                        var decalXTo = $this.width() / 2 + parseInt($this.css('margin-left'));
-                        var decalYTo = $this.height() / 2 + parseInt($this.css('margin-top'));
-                        self.instances.map.drawZone.drawZone('clear');
-                        self.instances.map.drawZone.drawZone('drawArrow', pixelPositionFrom.left + decalXFrom, pixelPositionFrom.top + decalYFrom, pixelPositionTo.left + decalXTo, pixelPositionTo.top + decalYTo, 3, state == 'possible' ? '#00FF00' : 'red');
+                        self._drawMovement(positionFrom, position, state == 'possible' ? '#00FF00' : 'red');
                     }
                     $(this).removeClass('hover')
                         .removeClass('possible')
@@ -175,21 +185,50 @@ $.widget("power.power", {
                 $gridItem.appendTo(this.instances.map.grid);
                 $gridTouchItem.appendTo(this.instances.map.touchZone);
 
+                $gridItem.data('touch', $gridTouchItem);
+
                 this.instances.map.gridItems[i][j] = $gridItem;
             }
         }
     },
 
-    _refreshMap: function() {
-        this.instances.map.grid.find('.grid_item').html('');
+    _drawMovement: function(positionFrom, positionTo, color, refresh) {
+        var $gridFrom = this.instances.map.gridItems[positionFrom.x][positionFrom.y];
+        var $gridTo = this.instances.map.gridItems[positionTo.x][positionTo.y];
+        var pixelPositionFrom = $gridFrom.position();
+        var pixelPositionTo = $gridTo.position();
+        var decalXFrom = $gridFrom.width() / 2 + parseInt($gridFrom.css('margin-left'));
+        var decalYFrom = $gridFrom.height() / 2 + parseInt($gridFrom.css('margin-top'));
+        var decalXTo = $gridTo.width() / 2 + parseInt($gridTo.css('margin-left'));
+        var decalYTo = $gridTo.height() / 2 + parseInt($gridTo.css('margin-top'));
+        if (typeof refresh == 'undefined') {
+            refresh = true;
+        }
+        if (refresh) {
+            this._refreshDrawZone();
+        }
+        this.instances.map.drawZone.drawZone('drawArrow', pixelPositionFrom.left + decalXFrom, pixelPositionFrom.top + decalYFrom, pixelPositionTo.left + decalXTo, pixelPositionTo.top + decalYTo, 3, color);
+    },
 
-        var units = this.options.game.getUnitsOnMap(); //@todo temporary
+    _refreshMap: function() {
+        var self = this;
+        this.instances.map.grid.find('.grid_item').html('');
+        this.instances.map.touchZone.find('.grid_item').html('');
+
+        var units = this.options.game.getUnitsOnMap();
 
         for (var i = 0; i < units.length; i++) {
             var position = units[i].position;
             var unitsList = units[i].units;
             var unitDisplayClass = 'unit_display_' + Math.ceil(Math.sqrt(unitsList.length));
-            this.instances.map.gridItems[position.x][position.y]
+            var $gridItem = this.instances.map.gridItems[position.x][position.y];
+            var $gridTouchItem = $gridItem.data('touch');
+            $gridItem
+                .removeClass('unit_display_1')
+                .removeClass('unit_display_2')
+                .removeClass('unit_display_3')
+                .addClass(unitDisplayClass);
+            $gridTouchItem
                 .removeClass('unit_display_1')
                 .removeClass('unit_display_2')
                 .removeClass('unit_display_3')
@@ -197,18 +236,38 @@ $.widget("power.power", {
             for (var j = 0; j < unitsList.length; j++) {
                 var unit = unitsList[j];
 
-                var unitType = unit.type; //@todo temporary
+                var unitType = unit.type;
                 var $unit = $('<div class="unit"></div>')
                     .addClass(unitType)
-                    .addClass(this.options.team[unit.player.id]);;
-                $unit.appendTo(this.instances.map.gridItems[position.x][position.y]);
+                    .addClass(this.options.team[unit.player.id]);
+                $unit.data('unit', unit);
+                $unit.appendTo($gridItem);
+
+                var $touchUnit = $('<div class="unit"></div>');
+                $touchUnit.appendTo($gridTouchItem);
+
+                $touchUnit.data('unit', unit);
+
+                $touchUnit.click(function() {
+                    self.preSelectedUnit = $(this).data('unit');
+                });
             }
         }
     },
 
     selectGridItem: function(position) {
         var self = this;
+        if (this.unitsSelected) {
+            for (var key in this.unitsSelected) {
+                this.players[this.playerSelected].planifyMove(this.unitsSelected[key], position);
+            }
+        }
         this.unitsSelected = {};
+        if (this.preSelectedUnit) {
+            this.selectUnit(this.preSelectedUnit);
+            this.preSelectedUnit = null;
+        }
+        self._refreshDrawZone();
         var $gridItem = this.instances.map.gridItems[position.x][position.y];
         this.instances.map.grid.find('.grid_item').removeClass('selected');
         $gridItem.addClass('selected');
@@ -243,10 +302,10 @@ $.widget("power.power", {
 
             $unitItem.click(function() {
                 var $this = $(this);
-                var newState = self.switchSelectUnit($this.data('unit'));
-                newState ? $this.addClass('selected') : $this.removeClass('selected');
+                self.switchSelectUnit($this.data('unit'));
             });
         }
+        this._refreshUnitsView();
     },
 
     switchSelectUnit: function(unit) {
@@ -256,6 +315,7 @@ $.widget("power.power", {
     selectUnit: function(unit) {
         if (unit.player.id == this.playerSelected) {
             this.unitsSelected[unit.id] = unit;
+            this._refreshUnitsView();
             return true;
         }
         return false;
@@ -263,7 +323,16 @@ $.widget("power.power", {
 
     deselectUnit: function(unit) {
         delete this.unitsSelected[unit.id];
+        this._refreshUnitsView();
         return false;
+    },
+
+    _refreshUnitsView: function() {
+        var self = this;
+        this.instances.mainView.find('.unit_item').each(function() {
+            var $this = $(this);
+            self.unitsSelected[$this.data('unit').id] ? $this.addClass('selected') : $this.removeClass('selected');
+        });
     },
 
     _trigger: function(name, params) {

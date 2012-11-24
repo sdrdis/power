@@ -17,7 +17,7 @@ Game = new new Class({
         }
     },
     createStartingUnits : function() {
-        this.players.foreach(function(player) {
+        this.players.forEach(function(player) {
             player.createUnit('Soldier');
             player.createUnit('Soldier');
             player.createUnit('Tank');
@@ -55,5 +55,10 @@ Game = new new Class({
             });
         });
         return units;
+    },
+    nextRound: function() {
+        this.players.forEach(function(player) {
+            player.resolvePlanifications();
+        });
     }
 });
