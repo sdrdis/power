@@ -1,8 +1,18 @@
 
-Game.start(4);
+$(document).ready(function() {
+    Game.start(4);
 
-// console.log(Game);
+    $('.game').power({
+        game: Game
+    });
 
-var unitsHQ = Game.getUnitsOnCell({x:0, y:0});
-console.log(unitsHQ[0]);
-console.log(unitsHQ[0].canMove({x:1, y:1}));
+    Game.players[0].units[0].moveTo({x: 1, y: 1});
+    $('.game').power('refresh');
+
+    console.log('Unit 0#4 can move to 3,3?', Game.players[0].units[4].canMove({x:3, y:3}));
+    console.log('player[0].units.length', Game.players[0].units.length);
+    Game.players[0].units[3].remove();
+    console.log('player[0].units.length', Game.players[0].units.length);
+
+    $('.game').power('refresh');
+});
