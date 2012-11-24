@@ -1,3 +1,11 @@
+function _(str) {
+    return str;
+}
+
 $(document).ready(function() {
-    $('.game').power();
+    Game.start(4);
+
+    $('.game').power({
+        game: Game
+    });
 });

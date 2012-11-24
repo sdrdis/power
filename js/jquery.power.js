@@ -2,20 +2,12 @@ $.widget("power.power", {
     options: {
         width: 9,
         height: 9,
-        map: {
-            units: [
-                {
-                    position: {x: 1, y: 1},
-                    list: [
-                        {
-                            type: 'soldier'
-                        },
-                        {
-                            type: 'soldier'
-                        }
-                    ]
-                }
-            ]
+        game: null,
+        team: {
+            1: 'chicken',
+            2: 'cow',
+            3: 'pig',
+            4: 'rabbit'
         }
     },
     instances: {
@@ -25,6 +17,8 @@ $.widget("power.power", {
             gridItems: {}
         },
         mainView: null
+    },
+    unitsSelected: {
     },
 
     _create: function() {
@@ -82,8 +76,31 @@ $.widget("power.power", {
                     $gridItem.addClass('bigger_horizontal');
                 }
                 $gridItem.data('position', {x: i, y: j});
+
                 $gridItem.click(function() {
                     self.selectGridItem($(this).data('position'));
+                });
+                $gridItem.mouseenter(function() {
+                    var position = $gridItem.data('position');
+                    var state = 'hover';
+                    for (var key in self.unitsSelected) {
+                        if (state === 'hover') {
+                           state = 'possible';
+                        }
+                        if (!self.unitsSelected[key].canMove(position)) {
+                            state = 'impossible';
+                        }
+                    }
+                    $(this).removeClass('hover')
+                        .removeClass('possible')
+                        .removeClass('impossible')
+                        .addClass(state);
+                });
+
+                $gridItem.mouseleave(function() {
+                    $(this).removeClass('hover')
+                        .removeClass('possible')
+                        .removeClass('impossible');
                 });
 
                 $gridItem.appendTo(this.instances.map.grid);
@@ -96,27 +113,32 @@ $.widget("power.power", {
     _refreshMap: function() {
         this.instances.map.grid.find('.grid_item').html('');
 
-        var units = this.options.map.units; //@todo temporary
+        var units = this.options.game.getUnitsOnMap(); //@todo temporary
 
         for (var i = 0; i < units.length; i++) {
             var position = units[i].position;
-            var unitsList = units[i].list;
+            var unitsList = units[i].units;
             var unitDisplayClass = 'unit_display_' + Math.ceil(Math.sqrt(unitsList.length));
             this.instances.map.gridItems[position.x][position.y]
                 .removeClass('unit_display_1')
                 .removeClass('unit_display_2')
                 .removeClass('unit_display_3')
                 .addClass(unitDisplayClass);
-            for (var i = 0; i < unitsList.length; i++) {
-                var unit = unitsList[i];
+            for (var j = 0; j < unitsList.length; j++) {
+                var unit = unitsList[j];
+
                 var unitType = unit.type; //@todo temporary
-                var $unit = $('<div class="unit"></div>').addClass(unitType);
+                var $unit = $('<div class="unit"></div>')
+                    .addClass(unitType)
+                    .addClass(this.options.team[unit.player.id]);;
                 $unit.appendTo(this.instances.map.gridItems[position.x][position.y]);
             }
         }
     },
 
     selectGridItem: function(position) {
+        var self = this;
+        this.unitsSelected = {};
         var $gridItem = this.instances.map.gridItems[position.x][position.y];
         this.instances.map.grid.find('.grid_item').removeClass('selected');
         $gridItem.addClass('selected');
@@ -124,17 +146,51 @@ $.widget("power.power", {
 
         this.instances.mainView.html('');
         var $gridItemView = $('<div class="grid_item_view"></div>');
-        var $position = $('<div class="position"></div>');
-
-        $position.appendTo($gridItemView);
         $gridItemView.appendTo(this.instances.mainView);
 
-        $position.text(strtr('Cell selected: {x}, {y}', position));
+        var $position = $('<div class="position"></div>');
+        $position.appendTo($gridItemView);
+        $position.text(strtr(_('Cell selected: {x}, {y}'), position));
 
+        var units = this.options.game.getUnitsOnCell(position);
 
+        var $units = $('<div class="units"></div>');
+        var $unitsLabel = $('<div class="units_label"></div>');
+        var $unitsList = $('<div class="units_list"></div>');
+        $unitsLabel.appendTo($units);
+        $unitsList.appendTo($units);
+        $units.appendTo($gridItemView);
+        $unitsLabel.text(strtr(_('There is {nb} unit(s) on this cell'), {nb: units.length}));
+        for (var i = 0; i < units.length; i++) {
+            var unit = units[i];
+            var $unitItem = $('<div class="unit_item"></div>');
+            $unitItem.addClass(unit.type)
+                .addClass(this.options.team[unit.player.id]);
+            $unitItem.appendTo($unitsList);
+            var $unitItemHover = $('<div class="unit_item_hover"></div>');
+            $unitItemHover.appendTo($unitItem);
+            $unitItem.data('unit', unit);
 
+            $unitItem.click(function() {
+                var $this = $(this);
+                var newState = self.switchSelectUnit($this.data('unit'));
+                newState ? $this.addClass('selected') : $this.removeClass('selected');
+            });
+        }
+    },
 
-        //.text('Position: [' + position.x + ', ' + position.y + ']');
+    switchSelectUnit: function(unit) {
+      return this.unitsSelected[unit.id] ? this.deselectUnit(unit) : this.selectUnit(unit);
+    },
+
+    selectUnit: function(unit) {
+        this.unitsSelected[unit.id] = unit;
+        return true;
+    },
+
+    deselectUnit: function(unit) {
+        delete this.unitsSelected[unit.id];
+        return false;
     },
 
     _trigger: function(name, params) {

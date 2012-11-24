@@ -21,6 +21,31 @@
     height: 666px;
 }
 
+/* UNITS */
+.soldier.pig {
+    background: url(../images/units/pig/soldier.png);
+}
+
+.soldier.cow {
+    background: url(../images/units/cow/soldier.png);
+}
+
+.soldier.chicken {
+    background: url(../images/units/chicken/soldier.png);
+}
+
+.soldier.rabbit {
+    background: url(../images/units/rabbit/soldier.png);
+}
+
+.tank {
+    background-color: blue;
+}
+
+.jetfighter {
+    background-color: purple;
+}
+
 /* MAP */
 .map {
     background: url(../images/map.jpg);
@@ -43,8 +68,16 @@
     background-color: rgba(255, 255, 255, 0.8);
 }
 
-.grid .grid_item:hover {
+.grid .grid_item.hover {
     background-color: rgba(255, 255, 255, 0.5);
+}
+
+.grid .grid_item.possible {
+    background-color: rgba(0, 255, 0, 0.5);
+}
+
+.grid .grid_item.impossible {
+    background-color: rgba(255, 0, 0, 0.5);
 }
 
 .grid .grid_item.bigger_vertical {
@@ -62,14 +95,6 @@
     background-size: 100% 100%;
 }
 
-.grid_item .unit.soldier {
-    background-color: red;
-}
-
-.grid_item .unit.tank {
-    background-color: blue;
-}
-
 .unit_display_1 .unit {
     width: 100%;
     height: 100%;
@@ -83,4 +108,33 @@
 .unit_display_3 .unit {
     width: 33.3333333%;
     height: 33.3333333%;
+}
+
+/* VIEW */
+.units_list {
+    overflow: hidden;
+}
+
+.units_list .unit_item {
+    float: left;
+    width: 128px;
+    height: 128px;
+    margin: 10px;
+    background-size: 100% 100%;
+}
+
+.unit_item .unit_item_hover {
+    display: block;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.unit_item:hover .unit_item_hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.unit_item.selected .unit_item_hover {
+    border: 2px solid black;
 }

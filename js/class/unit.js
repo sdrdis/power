@@ -1,6 +1,7 @@
 Unit = new Class({
     initialize: function(position){
         this.position = position;
+        this.id = Unit.getNewId();
     },
     canMove: function(new_position) {
 
@@ -43,3 +44,9 @@ Unit = new Class({
         return cell.x >= room[0].x && cell.x <= room[1].x && cell.y >= room[0].y && cell.y <= room[1].y;
     }
 });
+
+Unit._internalId = 0;
+Unit.getNewId = function() {
+    Unit._internalId++;
+    return Unit._internalId;
+};
