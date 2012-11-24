@@ -1,24 +1,24 @@
 /* POWER INTERFACE MAIN COMPONENTS */
 .game {
     position: relative;
-    width: 800px;
-    height: 400px;
+    width: 966px;
+    height: 666px;
 }
 
 .map {
     position: absolute;
-    width: 400px;
-    height: 400px;
+    width: 666px;
+    height: 666px;
     top: 0px;
     left: 0px;
 }
 
 .main_view {
     position: absolute;
-    left: 400px;
-    width: 400px;
+    left: 666px;
+    width: 300px;
     top: 0px;
-    height: 400px;
+    height: 666px;
 }
 
 /* MAP */
@@ -39,6 +39,48 @@
     height: 11.111111111%;
 }
 
+.grid .grid_item.selected {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
 .grid .grid_item:hover {
     background-color: rgba(255, 255, 255, 0.5);
+}
+
+.grid .grid_item.bigger_vertical {
+    height: 33.33333333%;
+    margin-top: -11.1111111%;
+}
+
+.grid .grid_item.bigger_horizontal {
+    width: 33.33333333%;
+    margin-left: -11.1111111%;
+}
+
+.grid_item .unit {
+    float: left;
+    background-size: 100% 100%;
+}
+
+.grid_item .unit.soldier {
+    background-color: red;
+}
+
+.grid_item .unit.tank {
+    background-color: blue;
+}
+
+.unit_display_1 .unit {
+    width: 100%;
+    height: 100%;
+}
+
+.unit_display_2 .unit {
+    width: 50%;
+    height: 50%;
+}
+
+.unit_display_3 .unit {
+    width: 33.3333333%;
+    height: 33.3333333%;
 }
