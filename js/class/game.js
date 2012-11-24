@@ -3,7 +3,7 @@ Game = new new Class({
         this.players = [];
         this.map = null;
     },
-    start: function(playerCount) {
+    createPlayers: function(playerCount) {
         this.map = new Map();
         var starting_positions = {
             1: {x: 0, y: 0},
@@ -13,16 +13,20 @@ Game = new new Class({
         };
         for (var i=1; i<=playerCount ; i++) {
             var player = new Player(i, 'Player ' + i, starting_positions[i]);
-            player.createUnit('Soldier');
-            player.createUnit('Soldier');
-            player.createUnit('Tank');
-            player.createUnit('Tank');
-            player.createUnit('JetFighter');
-            player.createUnit('JetFighter');
-            player.createUnit('Destroyer');
-            player.createUnit('Destroyer');
             this.players.push(player);
         }
+    },
+    createStartingUnits : function() {
+        this.players.foreach(function(player) {
+            player.createUnit('Soldier');
+            player.createUnit('Soldier');
+            player.createUnit('Tank');
+            player.createUnit('Tank');
+            player.createUnit('JetFighter');
+            player.createUnit('JetFighter');
+            player.createUnit('Destroyer');
+            player.createUnit('Destroyer');
+        });
     },
     getUnitsOnMap: function() {
         var result = [];

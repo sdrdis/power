@@ -82,12 +82,11 @@ $.widget("power.power", {
         this.instances.map.drawZone = $('<canvas class="draw_zone"></canvas>');
         this.instances.map.grid = $('<div class="grid"></div>');
         this.instances.map.touchZone = $('<div class="touch_zone"></div>');
-        this.instances.map.drawZone.appendTo(this.instances.map.main);
         this.instances.map.grid.appendTo(this.instances.map.main);
+        this.instances.map.drawZone.appendTo(this.instances.map.main);
         this.instances.map.touchZone.appendTo(this.instances.map.main);
 
         this.instances.map.drawZone.drawZone();
-
 
         var mergedPositions1 = {
             0: true,
@@ -144,7 +143,6 @@ $.widget("power.power", {
                         if (state === 'hover') {
                            state = 'possible';
                         }
-                        console.log(position);
                         if (!self.unitsSelected[key].canMove(position)) {
                             state = 'impossible';
                         }
@@ -154,7 +152,12 @@ $.widget("power.power", {
                         var $gridFrom = self.instances.map.gridItems[positionFrom.x][positionFrom.y];
                         var pixelPositionFrom = $gridFrom.position();
                         var pixelPositionTo = $this.position();
-                        self.instances.map.drawZone.drawZone('drawLine', pixelPositionFrom.left, pixelPositionFrom.top, pixelPositionTo.left, pixelPositionTo.top, 2, 'black');
+                        var decalXFrom = $gridFrom.width() / 2 + parseInt($gridFrom.css('margin-left'));
+                        var decalYFrom = $gridFrom.height() / 2 + parseInt($gridFrom.css('margin-top'));
+                        var decalXTo = $this.width() / 2 + parseInt($this.css('margin-left'));
+                        var decalYTo = $this.height() / 2 + parseInt($this.css('margin-top'));
+                        self.instances.map.drawZone.drawZone('clear');
+                        self.instances.map.drawZone.drawZone('drawArrow', pixelPositionFrom.left + decalXFrom, pixelPositionFrom.top + decalYFrom, pixelPositionTo.left + decalXTo, pixelPositionTo.top + decalYTo, 3, state == 'possible' ? '#00FF00' : 'red');
                     }
                     $(this).removeClass('hover')
                         .removeClass('possible')
