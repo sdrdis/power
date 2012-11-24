@@ -1,0 +1,44 @@
+/* POWER INTERFACE MAIN COMPONENTS */
+.game {
+    position: relative;
+    width: 800px;
+    height: 400px;
+}
+
+.map {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    top: 0px;
+    left: 0px;
+}
+
+.main_view {
+    position: absolute;
+    left: 400px;
+    width: 400px;
+    top: 0px;
+    height: 400px;
+}
+
+/* MAP */
+.map {
+    background: url(../images/map.jpg);
+    background-size: 100% 100%;
+}
+
+.grid {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.grid .grid_item {
+    position: absolute;
+    width: 11.111111111%;
+    height: 11.111111111%;
+}
+
+.grid .grid_item:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
