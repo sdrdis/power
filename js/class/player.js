@@ -12,14 +12,16 @@ Player = new Class({
         var unit = new window[name](position || this.hq);
         unit.player = this;
         this.units.push(unit);
+        return unit;
     },
     canPlanify : function() {
-        return this.planifications.length >= 5;
+        return this.planifications.length < 5;
     },
     resolvePlanifications : function() {
+        var self = this;
         this.planifications.forEach(function(planification) {
             var action = planification.shift();
-            this[action].apply(this, planification);
+            self[action].apply(self, planification);
         });
         this.planifications = [];
     },
@@ -31,13 +33,14 @@ Player = new Class({
     },
     planifyMove : function(unit, where) {
         if (!this.canPlanify() || !this.canMove(unit, where)) {
+            console.log("Can't move", !this.canPlanify(), !this.canMove(unit, where))
             return false;
         }
-        this.planifications.push(['move', unit, where]);
+        this.planifications.push(['resolveMove', unit, where]);
         return true;
     },
     resolveMove : function(unit, where) {
-        return unit.move(where);
+        return unit.moveTo(where);
     },
 
     // FUSION
@@ -59,7 +62,7 @@ Player = new Class({
         if (!this.canPlanify() || !this.canFusion(unit)) {
             return false;
         }
-        this.planifications.push(['fusion', unit]);
+        this.planifications.push(['resolveFusion', unit]);
         return true;
     },
     resolveFusion : function(unit) {
@@ -97,7 +100,7 @@ Player = new Class({
         if (!this.canPlanify() || !this.canMissile(units)) {
             return false;
         }
-        this.planifications.push(['missile', units]);
+        this.planifications.push(['resolveMissile', units]);
         return true;
     },
     resolveMissile : function(units) {
@@ -129,7 +132,7 @@ Player = new Class({
         if (!this.canPlanify() || !this.canBuy(unitType)) {
             return false;
         }
-        this.planifications.push(['buy', unitType]);
+        this.planifications.push(['resolveBuy', unitType]);
         return true;
     },
     resolveBuy : function(unitType) {

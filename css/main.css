@@ -55,6 +55,10 @@
     background-color: purple;
 }
 
+.destroyer {
+    background-color: white;
+}
+
 /* MAP */
 .map {
     background: url(../images/map.jpg);
