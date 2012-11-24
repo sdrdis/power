@@ -21,6 +21,8 @@ $.widget("power.power", {
         map: {
             main: null,
             grid: null,
+            drawZone: null,
+            touchZone: null,
             gridItems: {}
         },
         topView: null
@@ -77,9 +79,15 @@ $.widget("power.power", {
 
     _initializeMap: function() {
         var self = this;
-
+        this.instances.map.drawZone = $('<canvas class="draw_zone"></canvas>');
         this.instances.map.grid = $('<div class="grid"></div>');
+        this.instances.map.touchZone = $('<div class="touch_zone"></div>');
+        this.instances.map.drawZone.appendTo(this.instances.map.main);
         this.instances.map.grid.appendTo(this.instances.map.main);
+        this.instances.map.touchZone.appendTo(this.instances.map.main);
+
+        this.instances.map.drawZone.drawZone();
+
 
         var mergedPositions1 = {
             0: true,
@@ -120,33 +128,49 @@ $.widget("power.power", {
                 }
                 $gridItem.data('position', {x: i, y: j});
 
-                $gridItem.click(function() {
+
+                var $gridTouchItem = $gridItem.clone();
+                $gridTouchItem.data('position', {x: i, y: j});
+
+                $gridTouchItem.click(function() {
                     self.selectGridItem($(this).data('position'));
                 });
-                $gridItem.mouseenter(function() {
-                    var position = $gridItem.data('position');
+                $gridTouchItem.mouseenter(function() {
+                    var $this = $(this);
+                    var position = $this.data('position');
+                    var positionFrom = null;
                     var state = 'hover';
                     for (var key in self.unitsSelected) {
                         if (state === 'hover') {
                            state = 'possible';
                         }
+                        console.log(position);
                         if (!self.unitsSelected[key].canMove(position)) {
                             state = 'impossible';
                         }
+                        positionFrom = self.unitsSelected[key].position;
+                    }
+                    if (positionFrom) {
+                        var $gridFrom = self.instances.map.gridItems[positionFrom.x][positionFrom.y];
+                        var pixelPositionFrom = $gridFrom.position();
+                        var pixelPositionTo = $this.position();
+                        self.instances.map.drawZone.drawZone('drawLine', pixelPositionFrom.left, pixelPositionFrom.top, pixelPositionTo.left, pixelPositionTo.top, 2, 'black');
                     }
                     $(this).removeClass('hover')
                         .removeClass('possible')
                         .removeClass('impossible')
                         .addClass(state);
+
                 });
 
-                $gridItem.mouseleave(function() {
+                $gridTouchItem.mouseleave(function() {
                     $(this).removeClass('hover')
                         .removeClass('possible')
                         .removeClass('impossible');
                 });
 
                 $gridItem.appendTo(this.instances.map.grid);
+                $gridTouchItem.appendTo(this.instances.map.touchZone);
 
                 this.instances.map.gridItems[i][j] = $gridItem;
             }
@@ -227,8 +251,11 @@ $.widget("power.power", {
     },
 
     selectUnit: function(unit) {
-        this.unitsSelected[unit.id] = unit;
-        return true;
+        if (unit.player.id == this.playerSelected) {
+            this.unitsSelected[unit.id] = unit;
+            return true;
+        }
+        return false;
     },
 
     deselectUnit: function(unit) {

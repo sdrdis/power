@@ -61,40 +61,42 @@
     background-size: 100% 100%;
 }
 
-.grid {
+.grid, .draw_zone, .touch_zone {
     position: absolute;
+    top: 0px;
+    left: 0px;
     width: 100%;
     height: 100%;
 }
 
-.grid .grid_item {
+.grid .grid_item, .touch_zone .grid_item {
     position: absolute;
     width: 11.111111111%;
     height: 11.111111111%;
 }
 
-.grid .grid_item.selected {
+.touch_zone .grid_item.selected {
     background-color: rgba(255, 255, 255, 0.8);
 }
 
-.grid .grid_item.hover {
+.touch_zone .grid_item.hover {
     background-color: rgba(255, 255, 255, 0.5);
 }
 
-.grid .grid_item.possible {
+.touch_zone .grid_item.possible {
     background-color: rgba(0, 255, 0, 0.5);
 }
 
-.grid .grid_item.impossible {
+.touch_zone .grid_item.impossible {
     background-color: rgba(255, 0, 0, 0.5);
 }
 
-.grid .grid_item.bigger_vertical {
+.grid .grid_item.bigger_vertical, .touch_zone .grid_item.bigger_vertical {
     height: 33.33333333%;
     margin-top: -11.1111111%;
 }
 
-.grid .grid_item.bigger_horizontal {
+.grid .grid_item.bigger_horizontal, .touch_zone .grid_item.bigger_horizontal {
     width: 33.33333333%;
     margin-left: -11.1111111%;
 }
