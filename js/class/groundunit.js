@@ -20,14 +20,15 @@ GroundUnit = new Class({
             {x1:0, y1:4, x2:4, y2:8},
             {x1:4, y1:4, x2:8, y2:8}
         ];
-
-        for (var i=0; i<rooms.length ; i++) {
-            var room = rooms[i];
-            if (this._isCellInsideRoom(old_position, room)) {
-                return this._isCellInsideRoom(new_position, room);
+        
+        var authorised = false;
+        var self = this;
+        rooms.forEach(function(room) {
+            if (self._isCellInsideRoom(old_position, room) && self._isCellInsideRoom(new_position, room)) {
+                authorised = true;
             }
-        }
-        return true;
+        });
+        return authorised;
     },
 
     _isCellInsideRoom: function(cell, room) {
