@@ -6,19 +6,19 @@ GroundUnit = new Class({
     },
     canMove: function(new_position) {
         // Ground unit can't move outside of their current area (room)
-        if (!this.checkRooms(this.position ,this.new_position)) {
+        if (!this.checkRooms(this.position, new_position)) {
             return false;
         }
-        return this.parent.canMove(new_position);
+        return this.parent(new_position);
     },
 
     // Ground units cannot move out of each rooms
     checkRooms: function(old_position, new_position) {
         var rooms = [
-            [{x:0, y:0}, {x:4, y:4}],
-            [{x:4, y:0}, {x:8, y:4}],
-            [{x:0, y:4}, {x:4, y:8}],
-            [{x:4, y:4}, {x:8, y:8}]
+            {x1:0, y1:0, x2:4, y2:4},
+            {x1:4, y1:0, x2:8, y2:4},
+            {x1:0, y1:4, x2:4, y2:8},
+            {x1:4, y1:4, x2:8, y2:8}
         ];
 
         for (var i=0; i<rooms.length ; i++) {
@@ -31,6 +31,6 @@ GroundUnit = new Class({
     },
 
     _isCellInsideRoom: function(cell, room) {
-        return cell.x >= room[0].x && cell.x <= room[1].x && cell.y >= room[0].y && cell.y <= room[1].y;
+        return cell.x >= room.x1 && cell.x <= room.x2 && cell.y >= room.y1 && cell.y <= room.y2;
     }
 });

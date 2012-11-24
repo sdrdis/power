@@ -16,12 +16,44 @@ Player = new Class({
     canPlanify : function() {
         return this.planifications.length >= 5;
     },
+    resolvePlanifications : function() {
+        this.planifications.forEach(function(planification) {
+            var action = planification.shift();
+            this[action].apply(this, planification);
+        });
+        this.planifications = [];
+    },
+
+    // MOVE
+    canMove: function(unit, where) {
+        // @todo check whether the unit has already moved in a previous planifications
+        return unit.canMove(where);
+    },
     planifyMove : function(unit, where) {
         if (!this.canPlanify() || !this.canMove(unit, where)) {
             return false;
         }
         this.planifications.push(['move', unit, where]);
         return true;
+    },
+    resolveMove : function(unit, where) {
+        return unit.move(where);
+    },
+
+    // FUSION
+    canFusion: function(unit) {
+
+        var fusionType = unit.type;
+        // @todo retrieve units position after planifications
+        var units = Game.getUnitsOnCell(unit.position);
+        var remaining = 3; // How many units of the same type we need for the fusion
+
+        units.forEach(function(unit) {
+            if (unit.type == fusionType && remaining > 0) {
+                remaining--;
+            }
+        });
+        return remaining == 0;
     },
     planifyFusion : function(unit) {
         if (!this.canPlanify() || !this.canFusion(unit)) {
@@ -30,39 +62,11 @@ Player = new Class({
         this.planifications.push(['fusion', unit]);
         return true;
     },
-    planifyMissile : function(units) {
-        if (!this.canPlanify() || !this.canMissile(unit)) {
-            return false;
-        }
-        this.planifications.push(['missile', units]);
-        return true;
-    },
-    planifyBuy : function(unitType) {
-        if (!this.canPlanify() || !this.canBuy(unitType)) {
-            return false;
-        }
-        this.planifications.push(['buy', unitType]);
-        return true;
-    },
-    resolvePlanifications : function() {
-        this.planifications.forEach(function(planification) {
-            var action = planification.shift();
-            this[action].apply(this, planification);
-        });
-        this.planifications = [];
-    },
-    resolveMove : function(unit, new_position) {
-        return unit.move(new_position);
-    },
-    resolveFusion : function(unitFusion) {
-        if (!this.canFusion(unit)) {
-            return false;
-        }
-        
-        var fusionPosition = unitFusion.position;
-        var fusionType = unitFusion.type;
+    resolveFusion : function(unit) {
+        var fusionPosition = unit.position;
+        var fusionType = unit.type;
         var evolution = unit.evolution;
-        
+
         var units = Game.getUnitsOnCell(fusionPosition);
         var remaining = 3;
 
@@ -75,30 +79,62 @@ Player = new Class({
         this.createUnit(evolution, fusionPosition);
         return true;
     },
-    resolveMissile : function(units) {
-        if (!this.canMissile(units)) {
+
+    // MISSILE
+    canMegaMissile: function(units) {
+
+        // @todo Check all units have the same position (including the previous planifications)
+        // @todo Check if unit has moved or have arrived
+        var neededPower = 100;
+        units.forEach(function(unit) {
+            if (neededPower > 0) {
+                neededPower -= unit.power;
+            }
+        });
+        return neededPower <= 0;
+    },
+    planifyMissile : function(units) {
+        if (!this.canPlanify() || !this.canMissile(units)) {
             return false;
         }
-
+        this.planifications.push(['missile', units]);
+        return true;
+    },
+    resolveMissile : function(units) {
         var fusionPosition = units[0].position;
-        var remaining = 100;
+        var neededPower = 100;
 
         units.forEach(function(unit) {
-            if (remaining > 0) {
-                remaining -= unit.power;
+            if (neededPower > 0) {
+                neededPower -= unit.power;
                 unit.remove();
             }
         });
         this.createUnit('Missile', fusionPosition);
         return true;
     },
-    resolveBuy : function(unitType) {
-        if (!this.canBuy(unitType)) {
+
+    // BUY
+    canBuy: function(unitType) {
+        var availableGold = this.gold;
+        // Check previous buyings
+        this.planifications.foreach(function(planification) {
+            if (planification[0] == 'buy') {
+                availableGold -= window[planification[1]]['cost'];
+            }
+        });
+        return window[unitType]['cost'] <= availableGold;
+    },
+    planifyBuy : function(unitType) {
+        if (!this.canPlanify() || !this.canBuy(unitType)) {
             return false;
         }
-
-        var unit = this.createUnit(unitType, this.hq);
-        this.gold -= unitType['cost'];
+        this.planifications.push(['buy', unitType]);
+        return true;
+    },
+    resolveBuy : function(unitType) {
+        this.createUnit(unitType, this.hq);
+        this.gold -= window[unitType]['cost'];
         return true;
     }
 });
