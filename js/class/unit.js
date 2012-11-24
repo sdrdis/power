@@ -1,23 +1,20 @@
 Unit = new Class({
-    initialize: function(position){
+    initialize : function(position){
         this.position = position;
-        this.id = Unit.getNewId();
+        this.id = String.uniqueID();
     },
-    canMove: function(new_position) {
-        var path = AStar(Map.grid, [this.position.x, this.position.y], [new_position.x, new_position.y], 'DiagonalFree');
-        return this.movement < path.length;
+    canMove : function(new_position) {
+        var path = AStar(Game.map.grid, [this.position.x, this.position.y], [new_position.x, new_position.y], 'DiagonalFree');
+        return path.length - 1 <= this.movement;
     },
-    move: function(new_position) {
+    move : function(new_position) {
         if (!this.canMove(new_position)) {
             return false;
         }
         this.position = new_position;
         return true;
+    },
+    remove : function() {
+
     }
 });
-
-Unit._internalId = 0;
-Unit.getNewId = function() {
-    Unit._internalId++;
-    return Unit._internalId;
-};
