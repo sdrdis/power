@@ -149,6 +149,10 @@
   background: url(../images/units/rabbit/battlecruiser.png);
 }
 
+.megamissile {
+	background: url(../images/units/megamissile.png);
+}
+
 
 /* MAP */
 .map {
@@ -263,6 +267,14 @@
 
 .unit_item.selected .unit_item_hover {
     border: 2px solid black;
+}
+
+.units_fusion {
+	display: none;
+}
+
+.units_fusion.active {
+	display: block;
 }
 
 /* TOP VIEW */

@@ -66,6 +66,14 @@ Player = new Class({
             this.addPlanification(planification);
         }
     },
+    canFusion: function(position, units) {
+    	if (units.length == 0) {
+    		return false;
+    	}
+    	var planification = new PlanificationFusion(position, units);
+    	planification.player = this;
+    	return planification.isAuthorised();
+    },
     planifyFusion : function(position, units) {
         this.addPlanification(new PlanificationFusion(position, units));
     },
