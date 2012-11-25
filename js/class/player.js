@@ -77,6 +77,14 @@ Player = new Class({
     planifyFusion : function(position, units) {
         this.addPlanification(new PlanificationFusion(position, units));
     },
+    canMissile: function(position, units) {
+    	if (units.length == 0) {
+    		return false;
+    	}
+    	var planification = new PlanificationMissile(position, units);
+    	planification.player = this;
+    	return planification.isAuthorised();
+    },
     planifyMissile : function(position, units) {
         this.addPlanification(new PlanificationMissile(position, units));
     },

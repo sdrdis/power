@@ -55,6 +55,7 @@ $.widget("power.power", {
     preSelectedUnit: null,
     lastPlanifications: null,
     lastSelectedPosition: null,
+    lastEvents: null,
 
     _create: function() {
         var players = this.options.game.players;
@@ -143,7 +144,7 @@ $.widget("power.power", {
             			
             		});
             	}
-                self.options.game.nextRound();
+                this.lastEvents = self.options.game.nextRound();
                 self.playerSelected = 1;
             } else {
                 self.playerSelected++;
@@ -357,6 +358,7 @@ $.widget("power.power", {
         
         var $unitsPowerSelected = $('<div class="units_power_selected"></div>');
         var $unitsFusion = $('<div class="units_fusion"></div>');
+        var $unitsMissile = $('<div class="units_missile"></div>');
         
         var labelsByKey = {
 			staying: _('on this cell'),
@@ -373,6 +375,7 @@ $.widget("power.power", {
 	            $unitsLabel.appendTo($units);
 	            $unitsPowerSelected.appendTo($units);
 	            $unitsFusion.appendTo($units);
+	            $unitsMissile.appendTo($units);
 	            $unitsList.appendTo($units);
 	            $units.appendTo($gridItemView);
 	            $unitsLabel.text(strtr(_('{nb} unit(s) {label}'), {nb: units.length, label: labelsByKey[key]}));
@@ -405,6 +408,19 @@ $.widget("power.power", {
             	units.push(self.unitsSelected[key]);
             }
         	self.players[self.playerSelected].planifyFusion(self.lastSelectedPosition, units);
+        	self.selectGridItem(position);
+        });
+        
+        var $missileButton = $('<input type="button" />');
+        $missileButton.appendTo($unitsMissile);
+        $missileButton.val(_('Missile'));
+        $missileButton.click(function() {
+        	var units = [];
+        	for (var key in self.unitsSelected) {
+            	units.push(self.unitsSelected[key]);
+            }
+        	self.players[self.playerSelected].planifyMissile(self.lastSelectedPosition, units);
+        	self.selectGridItem(position);
         });
         
         this._refreshUnitsView();
@@ -444,8 +460,13 @@ $.widget("power.power", {
         }
         this.instances.mainView.find('.units_power_selected').text(strtr(_('Total power selected: {totalPower}'), {totalPower: totalPower}));
         
-        var $unitFusion = this.instances.mainView.find('.units_fusion');
-        this.players[this.playerSelected].canFusion(this.lastSelectedPosition, units) ? $unitFusion.addClass('active') : $unitFusion.removeClass('active');
+        if (units.length == 3) {
+	        var $unitFusion = this.instances.mainView.find('.units_fusion');
+	        this.players[this.playerSelected].canFusion(this.lastSelectedPosition, units) ? $unitFusion.addClass('active') : $unitFusion.removeClass('active');
+        }
+        
+        var $unitMissile = this.instances.mainView.find('.units_missile');
+        this.players[this.playerSelected].canMissile(this.lastSelectedPosition, units) ? $unitMissile.addClass('active') : $unitMissile.removeClass('active');
     },
 
     _trigger: function(name, params) {
@@ -552,6 +573,8 @@ $.widget("power.power", {
     					.appendTo($planificationsPlayerList);
     			});
     		}
+    		
+    		console.log(this.lastEvents);
     	}
     },
     
@@ -573,6 +596,12 @@ $.widget("power.power", {
     	if (instanceOf(planification, PlanificationFusion)) {
     		$item.text(strtr(_('Merge 3 {unitType}s on [{x}, {y}]'), {
     			unitType: this._getUnitTypeLabel(planification.involvedUnits[0].type),
+    			x: planification.involvedUnits[0].position.x,
+    			y: planification.involvedUnits[0].position.y,
+    		}));
+    	}
+    	if (instanceOf(planification, PlanificationMissile)) {
+    		$item.text(strtr(_('Merge units to missile on [{x}, {y}]'), {
     			x: planification.involvedUnits[0].position.x,
     			y: planification.involvedUnits[0].position.y,
     		}));
