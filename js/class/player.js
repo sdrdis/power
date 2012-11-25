@@ -7,6 +7,7 @@ Player = new Class({
         this.actions = [];
         this.gold = 0;
         this.planifications = [];
+        this.gameOver = false;
     },
     createUnit : function(name, position) {
         var unit = new window[name](position || this.hq);
@@ -27,7 +28,11 @@ Player = new Class({
     },
     replacePlanification: function(index, planification) {
         planification.player = this;
-        this.planifications.splice(index, 1, planification);
+        if (!planification.isAuthorised()) {
+            this.cancelPlanification(index);
+        } else {
+            this.planifications.splice(index, 1, planification);
+        }
     },
     cancelPlanification: function(index) {
         this.planifications.splice(index, 1);

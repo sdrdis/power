@@ -11,5 +11,6 @@ PlanificationMove = new Class({
     },
     resolve: function() {
         this.unit.moveTo(this.where);
+        this.unit.has_moved = true;
     }
 });
