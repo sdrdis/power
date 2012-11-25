@@ -23,7 +23,7 @@ PlanificationFusion = new Class({
         return remaining <= 0;
     },
     resolve: function() {
-        var evolution = this.unit[0].evolution;
+        var evolution = this.involvedUnits[0].evolution;
 
         this.involvedUnits.forEach(function(unit) {
             unit.remove();
