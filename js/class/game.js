@@ -58,6 +58,7 @@ Game = new new Class({
     },
     nextRound: function() {
         this.resolvePlanifications();
+        var missiles = this.resolveMissile();
         var fights = this.resolveFights();
         this.earnGold();
         this.resolveDead();
@@ -67,7 +68,8 @@ Game = new new Class({
             });
         });
         return {
-            fights : fights
+            fights : fights,
+            missiles : missiles
         };
     },
     resolvePlanifications : function() {
@@ -85,7 +87,6 @@ Game = new new Class({
         return found;
     },
     resolveFights : function() {
-        this.resolveMissile();
         var fights = [];
         this.getUnitsOnMap().forEach(function(cell) {
             var scores = {};
@@ -141,15 +142,18 @@ Game = new new Class({
         return fights;
     },
     resolveMissile : function() {
+        var missiles = [];
         this.getUnitsOnMap().forEach(function(cell) {
             cell.units.forEach(function(unit) {
                 if (unit.type == 'Missile' && unit.hasMoved()) {
+                    missiles.push(cell.position);
                     cell.units.forEach(function() {
                         unit.remove();
                     });
                 }
             });
         });
+        return missiles;
     },
     earnGold : function() {
         var rooms = [
