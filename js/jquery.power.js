@@ -99,8 +99,8 @@ $.widget("power.power", {
         var $playerPower = $('<div class="player_power"></div>');
         var $playerBuy = $('<div class="player_buy"></div>');
         var $playerRound = $('<div class="player_round"></div>');
-        var $buttonNext = $('<input type="button" />');
-        var $buttonBuy = $('<input type="button" />');
+        var $buttonNext = $('<input type="image" src="images/turn.png" width="100" height="100" />');
+        var $buttonBuy = $('<input type="image" src="images/buy.png" width="100" height="100" />');
 
         $playerName.appendTo(this.instances.topView);
         $playerPower.appendTo(this.instances.topView);
@@ -108,8 +108,8 @@ $.widget("power.power", {
         $playerBuy.appendTo(this.instances.topView);
 
         var playerName = this.options.playersInformations[this.playerSelected].name;
-        $playerName.text(strtr('Player playing: {playerName}', {playerName: playerName}));
-        $playerPower.text(strtr('{power} power', {power: this.players[this.playerSelected].getAvailableGold()}));
+        $playerName.text(strtr('{playerName}', {playerName: playerName}));
+        $playerPower.html(strtr('{power} <img src="images/minipower.png" width="30" height="30" />', {power: this.players[this.playerSelected].getAvailableGold()}));
         $playerRound.append($buttonNext);
         $buttonNext.val('Next');
         $buttonNext.click(function() {

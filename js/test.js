@@ -9,7 +9,7 @@ $(document).ready(function() {
     var soldier_4 = player_1.createUnit('Regiment');
     var destroyer_1 = player_1.createUnit('BattleCruiser');
 
-    player_1.planifyMissile(soldier_1.position, [destroyer_1, soldier_2, soldier_3, soldier_4]);
+    player_1.planifyMissile(soldier_1.position, [destroyer_1, soldier_2, soldier_4]);
 
     //player_1.planifyFusion(soldier_1.position, [soldier_1, soldier_2, soldier_3]);
     //player_1.planifyMove(soldier_1, {x: 1, y: 1});

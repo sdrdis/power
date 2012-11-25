@@ -1,33 +1,43 @@
 /* POWER INTERFACE MAIN COMPONENTS */
+
+body {
+    font-family : Krungtep, Arial;
+    font-size : 15px;
+}
 .game {
     position: relative;
-    width: 966px;
-    height: 706px;
+    width: 1000px;
+    height: 746px;
+    background: url(../images/bordure.png) no-repeat 0 -100px;
+    background-size: 100%;
 }
 
 .map {
     position: absolute;
-    width: 666px;
-    height: 666px;
-    top: 40px;
+    width: 600px;
+    height: 600px;
+    top: 90px;
     left: 0px;
+    z-index : 3;
 }
 
 .main_view {
     position: absolute;
-    left: 666px;
-    width: 300px;
-    top: 40px;
-    height: 666px;
+    left: 650px;
+    width: 350px;
+    top: 150px;
+    height: 1000px;
+    z-index : 2;
 }
 
 .top_view {
     position: absolute;
     left: 0px;
     top: 0px;
-    height: 40px;
+    height: 160px;
     width: 100%;
     overflow: hidden;
+    z-index : 1;
 }
 
 /* UNITS */
@@ -279,19 +289,28 @@
 
 /* TOP VIEW */
 .top_view .player_name, .top_view .player_power {
-    float: left;
+    position: absolute;
+    top: 10px;
+    left : 20px;
+    font-weight: bold;
 }
 
 .top_view .player_power {
-    margin-left: 20px;
+    position: absolute;
+    top: 30px;
+    left : 20px;
 }
 
 .top_view .player_buy {
-    float: right;
+    position : absolute;
+    top : 10px;
+    left : 660px;
 }
 
 .top_view .player_round {
-    float: right;
+    position : absolute;
+    top : 10px;
+    right : 40px;
 }
 
 /* BUY ITEM */
