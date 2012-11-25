@@ -64,7 +64,7 @@ Game = new new Class({
         this.resolveDead();
         this.getUnitsOnMap().forEach(function(cell) {
             cell.units.forEach(function(unit) {
-                unit.has_moved = false;
+                unit.hasMoved = false;
             });
         });
         return {
@@ -149,9 +149,9 @@ Game = new new Class({
         var missiles = [];
         this.getUnitsOnMap().forEach(function(cell) {
             cell.units.forEach(function(unit) {
-                if (unit.type == 'Missile' && unit.hasMoved()) {
+                if (unit.type == 'Missile' && unit.hasMoved) {
                     missiles.push(cell.position);
-                    cell.units.forEach(function() {
+                    Game.getUnitsOnCell(cell.position).forEach(function(unit) {
                         unit.remove();
                     });
                 }

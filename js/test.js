@@ -3,22 +3,18 @@ $(document).ready(function() {
 
     Game.createPlayers(4);
     var player_1 = Game.players[0];
-    var soldier_1 = player_1.createUnit('Soldier');
-    var soldier_2 = player_1.createUnit('Soldier');
-    var soldier_3 = player_1.createUnit('Soldier');
-    var soldier_4 = player_1.createUnit('Soldier');
-    var destroyer_1 = player_1.createUnit('Destroyer');
+    var soldier_1 = player_1.createUnit('Regiment');
+    var soldier_2 = player_1.createUnit('Regiment');
+    var soldier_3 = player_1.createUnit('Regiment');
+    var soldier_4 = player_1.createUnit('Regiment');
+    var destroyer_1 = player_1.createUnit('BattleCruiser');
 
-    player_1.getUnitsFusionningCell({x: 0, y:0});
-    player_1.getUnitsStayingCell({x: 0, y:0});
-    player_1.getUnitsIncomingCell({x: 0, y:0});
-    player_1.getUnitsLeavingCell({x: 0, y:0});
-    player_1.getUnitsOnCellByState({x: 0, y:0});
+    player_1.planifyMissile(soldier_1.position, [destroyer_1, soldier_2, soldier_3, soldier_4]);
 
-    player_1.planifyFusion(soldier_1.position, [soldier_1, soldier_2, soldier_3]);
-    player_1.planifyMove(soldier_1, {x: 1, y: 1});
-    player_1.planifyMove(soldier_4, {x: 2, y: 2});
-    player_1.planifyMove(destroyer_1, {x: 1, y: 1});
+    //player_1.planifyFusion(soldier_1.position, [soldier_1, soldier_2, soldier_3]);
+    //player_1.planifyMove(soldier_1, {x: 1, y: 1});
+    //player_1.planifyMove(soldier_4, {x: 2, y: 2});
+    //player_1.planifyMove(destroyer_1, {x: 1, y: 1});
     player_1.resolvePlanifications();
 
 

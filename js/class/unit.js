@@ -2,7 +2,7 @@ Unit = new Class({
     initialize : function(position){
         this.position = position;
         this.id = String.uniqueID();
-        this.has_moved = false;
+        this.hasMoved = false;
     },
     canMove : function(new_position) {
         var distance = this.distanceTo(new_position);
