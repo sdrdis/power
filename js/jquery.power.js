@@ -6,7 +6,7 @@ $.widget("power.power", {
         playersInformations: {
 			1: {
 				team: 'rabbit',
-				name: 'Player 1'
+				name: 'Julian'
 			},
 			2: {
 				team: 'pig',
@@ -14,7 +14,7 @@ $.widget("power.power", {
 			},
 			3: {
 				team: 'chicken',
-				name: 'Player 3'
+				name: 'Sebastien'
 			},
 			4: {
 				team: 'cow',
@@ -77,6 +77,8 @@ $.widget("power.power", {
         for (var i = 0; i < players.length; i++) {
         	this.players[players[i].id] = players[i];
         }
+        this.players[2].gameOver = true;
+        this.players[4].gameOver = true;
 
         this.instances.map.main = $('<div class="map"></div>');
         this.instances.mainView = $('<div class="main_view"></div>');
@@ -180,7 +182,7 @@ $.widget("power.power", {
             	}
             }
             
-            if (gameOverCount >= this.options.nbPlayer - 1) {
+            if (gameOverCount >= self.options.nbPlayer - 1) {
             	alert('GameOver! TODO: better display...');
             }
             
