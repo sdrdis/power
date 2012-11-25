@@ -33,6 +33,7 @@ $.widget("power.power", {
     playerSelected: 1,
     players: {},
     preSelectedUnit: null,
+    lastPlanifications: null,
 
     _create: function() {
         var players = this.options.game.players;
@@ -51,6 +52,7 @@ $.widget("power.power", {
 
         this._initializeMap();
         this.refresh();
+        this._showStartingView();
     },
 
     refresh: function() {
@@ -91,12 +93,17 @@ $.widget("power.power", {
         $buttonNext.val('Next');
         $buttonNext.click(function() {
             if (self.playerSelected == self.options.nbPlayer) {
+            	self.lastPlanifications = {};
+            	for (var key in self.players) {
+            		self.lastPlanifications[key] = self.players[key].planifications;
+            	}
                 self.options.game.nextRound();
                 self.playerSelected = 1;
             } else {
                 self.playerSelected++;
             }
             self.refresh();
+            self._showStartingView();
         });
 
         $buttonBuy.val('Buy');
@@ -357,32 +364,6 @@ $.widget("power.power", {
         $buy.appendTo(this.instances.mainView);
         
         
-        
-        var buyingUnits = this.players[this.playerSelected].getBuyingUnits();
-        
-        if (buyingUnits.length > 0) {
-	        var $buyingLabel = $('<div class="buying_label"></div>');
-	        var $buyingList = $('<div class="buying_list"></div>');
-	        $buyingLabel.text(_('Will be bought units'));
-	        $buyingLabel.appendTo(this.instances.mainView);
-	        $buyingList.appendTo(this.instances.mainView);
-	        for (var i = 0; i < buyingUnits.length; i++) {
-	        	this._displayUnit(
-	        			buyingUnits[i].unit,
-	        			$buyingList,
-	            		_('Cancel'),
-	            		{planification: buyingUnits[i].planification},
-	            		function() {
-	            			var planification = $(this).data('data').planification;
-	            			console.log(planification);
-	            			planification.cancel();
-	                        self.refresh();
-	                        self._showBuyView();
-	                    }
-	    		);
-	        }
-        }
-        
         var $buyLabel = $('<div class="buy_label"></div>');
         var $buyList = $('<div class="buy_list"></div>');
         $buyLabel.appendTo(this.instances.mainView);
@@ -401,6 +382,30 @@ $.widget("power.power", {
                         self._showBuyView();
                     }
     		);
+        }
+        
+        var buyingUnits = this.players[this.playerSelected].getBuyingUnits();
+        
+        if (buyingUnits.length > 0) {
+	        var $buyingLabel = $('<div class="buying_label"></div>');
+	        var $buyingList = $('<div class="buying_list"></div>');
+	        $buyingLabel.text(_('Units queue'));
+	        $buyingLabel.appendTo(this.instances.mainView);
+	        $buyingList.appendTo(this.instances.mainView);
+	        for (var i = 0; i < buyingUnits.length; i++) {
+	        	this._displayUnit(
+	        			buyingUnits[i].unit,
+	        			$buyingList,
+	            		_('Cancel'),
+	            		{planification: buyingUnits[i].planification},
+	            		function() {
+	            			var planification = $(this).data('data').planification;
+	            			planification.cancel();
+	                        self.refresh();
+	                        self._showBuyView();
+	                    }
+	    		);
+	        }
         }
     },
     
@@ -427,5 +432,20 @@ $.widget("power.power", {
         $item_button.data('unit', buyableUnit);
         $item_button.data('data', data);
         $item_button.click(callback);
+    },
+    
+    _showStartingView: function() {
+    	this.instances.mainView.html('');
+    	var $title = $('<div class="title"></div>');
+    	var $description = $('<div class="description"></div>');
+    	$title.appendTo(this.instances.mainView);
+    	$description.appendTo(this.instances.mainView);
+    	if (this.lastPlanifications === null) {
+    		$title.text(_('First round'));
+    		$description.text(_('You can start playing now'));
+    	} else {
+    		$title.text(_('Last round orders'));
+    		$description.text(_('Todo'));
+    	}
     }
 });
