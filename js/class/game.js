@@ -103,8 +103,8 @@ Game = new new Class({
                 Object.forEach(players, function(score, id) {
                     if (max_score == score) {
                         win_count++;
+                        win_id = id;
                     }
-                    win_id = id;
                 });
                 var win_player = Game.findPlayer(win_id);
                 cell.units.forEach(function(unit) {
@@ -138,7 +138,7 @@ Game = new new Class({
             {id : 3, x1:5, y1:1, x2:7, y2:3},
             {id : 4, x1:5, y1:5, x2:7, y2:7}
         ];
-        Object.forEach(this.players, function(player) {
+        this.players.forEach(function(player) {
             var earnedRooms = [];
             player.units.forEach(function(unit) {
                 rooms.forEach(function(room) {
@@ -150,19 +150,22 @@ Game = new new Class({
                 });
             });
             player.gold += Math.min(earnedRooms.length, 3);
+            console.log('Player ', player.id, ' earned ', Math.min(earnedRooms.length, 3));
         });
     },
     resolveDead : function() {
         // Check HQ invasion
-        Game.players.forEach(function(player) {
-            Game.getUnitsOnCell(player.hq).forEach(function(unit) {
-                if (unit.player.id != player.id) {
+        Game.players.forEach(function(looser) {
+            Game.getUnitsOnCell(looser.hq).forEach(function(unit) {
+                if (unit.player.id != looser.id) {
+                    var winner = unit.player;
+                    console.log('Player ', winner.id, ' won over player ', looser.id);
                     // Transfer units Ownership
-                    player.units.forEach(function() {
-                        unit.player.createUnit(unit.type);
+                    looser.units.forEach(function(unit) {
+                        winner.createUnit(unit.type);
                         unit.remove();
                     });
-                    player.gameOver = true;
+                    looser.gameOver = true;
                 }
             });
         });
