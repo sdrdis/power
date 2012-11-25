@@ -121,7 +121,7 @@ Player = new Class({
         var fusionning = [];
         var self = this;
         this.units.forEach(function(unit) {
-            var destination = self.getUnitPositionAfterPlanification();
+            var destination = self.getUnitPositionAfterPlanification(unit);
             if (destination.x == cell.x && destination.y == cell.y && self.isFusionning(unit)) {
                 fusionning.push(unit);
             }
