@@ -63,8 +63,8 @@ $.widget("power.power", {
         this.instances.map.drawZone.drawZone('clear');
         for (var i = 0; i < this.players[this.playerSelected].planifications.length; i++) {
             var planification = this.players[this.playerSelected].planifications[i];
-            if (planification[0] == 'resolveMove') {
-                this._drawMovement(planification[1].position, planification[2], '#00FF00', false);
+            if (instanceOf(planification, PlanificationMove)) {
+                this._drawMovement(planification.unit.position, planification.where, '#00FF00', false);
             }
         }
     },
@@ -86,7 +86,7 @@ $.widget("power.power", {
 
         var playerName = this.options.playerNames[this.playerSelected];
         $playerName.text(strtr('Player playing: {playerName}', {playerName: playerName}));
-        $playerPower.text(strtr('{power} power', {power: this.players[this.playerSelected].gold}));
+        $playerPower.text(strtr('{power} power', {power: this.players[this.playerSelected].getAvailableGold()}));
         $playerRound.append($buttonNext);
         $buttonNext.val('Next');
         $buttonNext.click(function() {
@@ -384,6 +384,7 @@ $.widget("power.power", {
             $item_button.data('unit', buyableUnit);
             $item_button.click(function() {
                 self.players[self.playerSelected].planifyBuy($(this).data('unit'));
+                self.refresh();
             });
         }
     }

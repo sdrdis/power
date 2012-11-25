@@ -139,6 +139,16 @@ Player = new Class({
             'incoming' : incoming,
             'leaving' : leaving
         };
+    },
+
+    getAvailableGold: function() {
+        var availableGold = this.gold;
+        this.planifications.forEach(function(planification) {
+            if (instanceOf(planification, PlanificationBuy)) {
+                availableGold -= new window[planification.unitType].power; //@todo: to be improved
+            }
+        });
+        return availableGold;
     }
 });
 
