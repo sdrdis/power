@@ -36,6 +36,21 @@ $.widget("power.power", {
 			'Destroyer': {
 				'label': 'destroyer'
 			},
+			'Regiment': {
+				'label': 'regiment'
+			},
+			'Assault': {
+				'label': 'assault tank'
+			},
+			'JetBomber': {
+				'label': 'jet bomber'
+			},
+			'BattleCruiser': {
+				'label': 'battlecruiser'
+			},
+			'Missile': {
+				'label': 'missile'
+			},
 		}
     },
     instances: {
@@ -581,30 +596,56 @@ $.widget("power.power", {
     		$planificationsEvents.appendTo($description);
     		
     		$.each(this.lastEvents.fights, function(key, fight) {
-    			var fight = this.lastEvents.fights[key];
     			var $planificationsFight = $('<div class="planifications_fight"></div>');
     			var playerIds = [];
     			for (var key in fight.scores) {
     				playerIds.push(key);
     			}
-    			console.log(fight);
-    			$planificationsFight.text(strtr(
-    					_('Fight on [{x}, {y}] between {player1} ({score1}) and {player2} ({score2})'),
+    			
+    			if (fight.tied) {
+    				$planificationsFight.text(strtr(
+        					_('Tight fight on [{x}, {y}] between {player1} ({score1}) and {player2} ({score2}). All player lost their units!'),
+        					{
+        						x: fight.position.x,
+        						y: fight.position.y,
+        						player1: self.options.playersInformations[playerIds[0]].name,
+        						score1: fight.scores[playerIds[0]],
+        						player2: self.options.playersInformations[playerIds[1]].name,
+        						score2: fight.scores[playerIds[1]]
+        					}
+    					)
+        			);
+    			} else {
+    				$planificationsFight.text(strtr(
+        					_('Fight on [{x}, {y}] between {player1} ({score1}) and {player2} ({score2}). Winner is {playerWinner}!'),
+        					{
+        						x: fight.position.x,
+        						y: fight.position.y,
+        						player1: self.options.playersInformations[playerIds[0]].name,
+        						score1: fight.scores[playerIds[0]],
+        						player2: self.options.playersInformations[playerIds[1]].name,
+        						score2: fight.scores[playerIds[1]],
+        						playerWinner: self.options.playersInformations[fight.winner.id].name,
+        					}
+    					)
+        			);
+    			}
+    			
+    			$planificationsFight.appendTo($description);
+    		});
+    		$.each(this.lastEvents.missiles, function(key, missile) {
+    			var $planificationsMissile = $('<div class="planifications_missile"></div>');
+    			$planificationsMissile.text(strtr(
+    					_('Missile sent on [{x}, {y}]. Boom!'),
     					{
-    						x: fight.position.x,
-    						y: fight.position.y,
-    						player1: this.options.playersInformations[playerIds[0]],
-    						score1: fight.scores[playerIds[0]],
-    						player2: this.options.playersInformations[playerIds[1]],
-    						score2: fight.scores[playerIds[1]]
+    						x: missile.x,
+    						y: missile.y
     					}
 					)
     			);
-    			$planificationsFight.appendTo($description);
-    		});
     			
-    		
-    		console.log(this.lastEvents);
+    			$planificationsMissile.appendTo($description);
+    		});
     	}
     },
     
