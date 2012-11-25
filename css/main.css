@@ -221,6 +221,11 @@
     height: 50%;
 }
 
+.unit_display_2.bigger_horizontal .unit {
+  width: 16.66666666%;
+  margin-left: 22%;
+}
+
 .unit_display_3 .unit {
     width: 33.3333333%;
     height: 33.3333333%;
@@ -264,6 +269,38 @@
     margin-left: 20px;
 }
 
+.top_view .player_buy {
+    float: right;
+}
+
 .top_view .player_round {
     float: right;
+}
+
+/* BUY ITEM */
+.buy_list_item {
+  float: left;
+  width: 128px;
+  height: 178px;
+  overflow: hidden;
+}
+
+.buy_list_item_image {
+  width: 128px;
+  height: 128px;
+  background-size: 100% 100%;
+}
+
+.buy_list_item_label {
+  width: 128px;
+  height: 20px;
+}
+
+.buy_list_item_action_zone {
+  width: 128px;
+  height: 30px;
+}
+
+.buy_list_item_action_zone input {
+  width: 100%;
 }
