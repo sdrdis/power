@@ -42,9 +42,9 @@
         <script type="text/javascript" src="js/main.js"></script>
 
         <script type="text/javascript">
-            function playSound(son)
+            function playSound(son, longVersion)
             {
-               document.getElementById("son").innerHTML = "<audio controls='controls' autoplay='autoplay' style='visibility: hidden; display: none;'><source src='sound/soundEffects/" + son + "Short.mp3' type='audio/mp3'></audio>";
+               document.getElementById("son").innerHTML = "<audio controls='controls' autoplay='autoplay' style='visibility: hidden; display: none;'><source src='sound/soundEffects/" + son + (longVersion ? 'Long' : 'Short') + ".mp3' type='audio/mp3'></audio>";
             }
         </script>
     </head>
