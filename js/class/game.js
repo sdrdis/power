@@ -131,12 +131,14 @@ Game = new new Class({
                 for (var i=0 ; i<cell.units.length ; i++) {
                     var unit = cell.units[i];
                     // Either tied
-                    if (win_count > 1) {
+                    if (fight.tied) {
                         unit.remove();
-                    }
-                    if (unit.player.id != win_id) {
+                        cell.units.splice(i, 1);
+                        i--;
+                    } else if (unit.player.id != win_id) {
                         winner.createUnit(unit.type);
                         unit.remove();
+                        cell.units.splice(i, 1);
                         i--;
                     }
                 }
