@@ -13,6 +13,7 @@ body {
     height: 746px;
     background: url(../images/bordure.png) no-repeat 0 -100px;
     background-size: 100%;
+    margin: 10px auto;
 }
 
 .map {
@@ -41,6 +42,12 @@ body {
     width: 100%;
     overflow: hidden;
     z-index : 1;
+}
+
+.game_title {
+    position: absolute;
+    left: 400px;
+    top: -10px;
 }
 
 /* UNITS */
@@ -279,7 +286,7 @@ body {
 }
 
 .unit_item.selected .unit_item_hover {
-    border: 2px solid black;
+  border: 2px solid #a01e00;
 }
 
 .units_fusion, .units_missile {
@@ -367,3 +374,17 @@ body {
 .buy_list_item_action_zone button image {
     vertical-align: middle;
 }
+
+.position {
+    display: none;
+}
+
+
+
+
+
+
+
+
+
+
