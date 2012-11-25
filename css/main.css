@@ -45,125 +45,125 @@ body {
 
 /* UNITS */
 .soldier.pig {
-    background: url(../images/units/pig/soldier.png);
+    background-image: url(../images/units/pig/soldier.png);
 }
 
 .soldier.cow {
-    background: url(../images/units/cow/soldier.png);
+    background-image: url(../images/units/cow/soldier.png);
 }
 
 .soldier.chicken {
-    background: url(../images/units/chicken/soldier.png);
+    background-image: url(../images/units/chicken/soldier.png);
 }
 
 .soldier.rabbit {
-    background: url(../images/units/rabbit/soldier.png);
+    background-image: url(../images/units/rabbit/soldier.png);
 }
 
 
 .tank.pig {
-  background: url(../images/units/pig/tank.png);
+  background-image: url(../images/units/pig/tank.png);
 }
 
 .tank.cow {
-  background: url(../images/units/cow/tank.png);
+  background-image: url(../images/units/cow/tank.png);
 }
 
 .tank.chicken {
-  background: url(../images/units/chicken/tank.png);
+  background-image: url(../images/units/chicken/tank.png);
 }
 
 .tank.rabbit {
-  background: url(../images/units/rabbit/tank.png);
+  background-image: url(../images/units/rabbit/tank.png);
 }
 
 
 .jetfighter.pig {
-  background: url(../images/units/pig/jetfighter.png);
+  background-image: url(../images/units/pig/jetfighter.png);
 }
 
 .jetfighter.cow {
-  background: url(../images/units/cow/jetfighter.png);
+  background-image: url(../images/units/cow/jetfighter.png);
 }
 
 .jetfighter.chicken {
-  background: url(../images/units/chicken/jetfighter.png);
+  background-image: url(../images/units/chicken/jetfighter.png);
 }
 
 .jetfighter.rabbit {
-  background: url(../images/units/rabbit/jetfighter.png);
+  background-image: url(../images/units/rabbit/jetfighter.png);
 }
 
 
 .destroyer.pig {
-  background: url(../images/units/pig/destroyer.png);
+  background-image: url(../images/units/pig/destroyer.png);
 }
 
 .destroyer.cow {
-  background: url(../images/units/cow/destroyer.png);
+  background-image: url(../images/units/cow/destroyer.png);
 }
 
 .destroyer.chicken {
-  background: url(../images/units/chicken/destroyer.png);
+  background-image: url(../images/units/chicken/destroyer.png);
 }
 
 .destroyer.rabbit {
-  background: url(../images/units/rabbit/destroyer.png);
+  background-image: url(../images/units/rabbit/destroyer.png);
 }
 
 
 .regiment.pig {
-  background: url(../images/units/pig/regiment.png);
+  background-image: url(../images/units/pig/regiment.png);
 }
 
 .regiment.cow {
-  background: url(../images/units/cow/regiment.png);
+  background-image: url(../images/units/cow/regiment.png);
 }
 
 .regiment.chicken {
-  background: url(../images/units/chicken/regiment.png);
+  background-image: url(../images/units/chicken/regiment.png);
 }
 
 .regiment.rabbit {
-  background: url(../images/units/rabbit/regiment.png);
+  background-image: url(../images/units/rabbit/regiment.png);
 }
 
 
 .jetbomber.pig {
-  background: url(../images/units/pig/jetbomber.png);
+  background-image: url(../images/units/pig/jetbomber.png);
 }
 
 .jetbomber.cow {
-  background: url(../images/units/cow/jetbomber.png);
+  background-image: url(../images/units/cow/jetbomber.png);
 }
 
 .jetbomber.chicken {
-  background: url(../images/units/chicken/jetbomber.png);
+  background-image: url(../images/units/chicken/jetbomber.png);
 }
 
 .jetbomber.rabbit {
-  background: url(../images/units/rabbit/jetbomber.png);
+  background-image: url(../images/units/rabbit/jetbomber.png);
 }
 
 
 .battlecruiser.pig {
-  background: url(../images/units/pig/battlecruiser.png);
+  background-image: url(../images/units/pig/battlecruiser.png);
 }
 
 .battlecruiser.cow {
-  background: url(../images/units/cow/battlecruiser.png);
+  background-image: url(../images/units/cow/battlecruiser.png);
 }
 
 .battlecruiser.chicken {
-  background: url(../images/units/chicken/battlecruiser.png);
+  background-image: url(../images/units/chicken/battlecruiser.png);
 }
 
 .battlecruiser.rabbit {
-  background: url(../images/units/rabbit/battlecruiser.png);
+  background-image: url(../images/units/rabbit/battlecruiser.png);
 }
 
 .missile {
-	background: url(../images/units/megamissile.png);
+	background-image: url(../images/units/megamissile.png);
 }
 
 
@@ -318,6 +318,11 @@ body {
 
 /* BUY ITEM */
 
+.buy_label {
+  color : #dbb80a;
+  font-weight: bold;
+  font-size: 20px;
+}
 .buy_list, .buying_list {
 	overflow: hidden;
 }
@@ -338,6 +343,7 @@ body {
 .buy_list_item_label {
   width: 128px;
   height: 20px;
+  display:none;
 }
 
 .buy_list_item_action_zone {
@@ -345,6 +351,19 @@ body {
   height: 30px;
 }
 
-.buy_list_item_action_zone input {
-  width: 100%;
+.buy_list_item_action_zone button {
+  margin-left: 1px;
+  width: 126px;
+  height: 30px;
+  line-height: 30px;
+  vertical-align: middle;
+  background-color: #de2a00;
+  color : #dbb80a;
+  font-weight: bold;
+  border: 1px solid #a01e00;
+  font-size: 15px;
+  cursor: pointer;
+}
+.buy_list_item_action_zone button image {
+    vertical-align: middle;
 }
