@@ -110,7 +110,7 @@ Player = new Class({
         var incoming = [];
         var self = this;
         this.units.forEach(function(unit) {
-            var destination = self.getUnitPositionAfterPlanification();
+            var destination = self.getUnitPositionAfterPlanification(unit);
             if (destination.x == cell.x && destination.y == cell.y && self.isMoving(unit)) {
                 incoming.push(unit);
             }
