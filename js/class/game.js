@@ -122,8 +122,14 @@ Game = new new Class({
                         fight.tied = true;
                     }
                 });
+
                 var winner = Game.findPlayer(win_id);
-                cell.units.forEach(function(unit) {
+                if (!fight.tied) {
+                    fight.winner = winner;
+                }
+
+                for (var i=0 ; i<cell.units.length ; i++) {
+                    var unit = cell.units[i];
                     // Either tied
                     if (win_count > 1) {
                         unit.remove();
@@ -131,10 +137,8 @@ Game = new new Class({
                     if (unit.player.id != win_id) {
                         winner.createUnit(unit.type);
                         unit.remove();
+                        i--;
                     }
-                });
-                if (!fight.tied) {
-                    fight.winner = winner;
                 }
                 fights.push(fight)
             }
@@ -185,10 +189,11 @@ Game = new new Class({
                     var winner = unit.player;
                     console.log('Player ', winner.id, ' won over player ', looser.id);
                     // Transfer units Ownership
-                    looser.units.forEach(function(unit) {
-                        winner.createUnit(unit.type);
-                        unit.remove();
-                    });
+                    for (var i=0 ; i<looser.units.length ; i++) {
+                        winner.createUnit(looser.units[i].type);
+                        looser.units[i].remove();
+                        i--;
+                    }
                     looser.gameOver = true;
                 }
             });
