@@ -28,11 +28,9 @@ Player = new Class({
     replacePlanification: function(index, planification) {
         planification.player = this;
         this.planifications.splice(index, 1, planification);
-        this.removeConflictingPlanifications();
     },
     cancelPlanification: function(index) {
-        this.planifications.splice(index, i);
-        this.removeConflictingPlanifications();
+        this.planifications.splice(index, 1);
     },
     resolvePlanifications : function() {
         this.planifications.forEach(function(planification) {

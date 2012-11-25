@@ -32,5 +32,9 @@ PlanificationMissile = new Class({
             //}
         });
         this.player.createUnit('Missile', fusionPosition);
+    },
+    isInvolved : function(unit) {
+        // @todo
+        return false;
     }
 });
