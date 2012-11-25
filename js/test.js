@@ -1,7 +1,6 @@
-
 $(document).ready(function() {
-    Game.start(4);
-
+    Game.createPlayers(4);
+    Game.createStartingUnits();
     $('.game').power({
         game: Game
     });
@@ -13,19 +12,4 @@ $(document).ready(function() {
 //    console.log('player[0].units.length', Game.players[0].units.length);
 //    Game.players[0].units[3].remove();
 //    console.log('player[0].units.length', Game.players[0].units.length);
-
-    console.log('test -> ', Game.players[2].units[2].moveTo({x: 7, y: 1}))
-
-    $('.game').power('refresh');
-    console.log('test -> ', Game.players[2].units[2].moveTo({x: 8, y: 4}))
-
-    $('.game').power('refresh');
-    console.log('test -> ', Game.players[2].units[2].moveTo({x: 7, y: 6}))
-    
-    var tank = Game.players[2].units[2];
-    console.log('---------------------------------');
-    console.log(tank._isCellInsideRoom(tank.position, {x1:4, y1:4, x2:8, y2:8}));
-    console.log(tank._isCellInsideRoom({x: 7, y: 6}, {x1:4, y1:4, x2:8, y2:8}));
-
-    $('.game').power('refresh');
 });
