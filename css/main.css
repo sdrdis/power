@@ -149,6 +149,10 @@
   background: url(../images/units/rabbit/battlecruiser.png);
 }
 
+.megamissile {
+	background: url(../images/units/megamissile.png);
+}
+
 
 /* MAP */
 .map {
