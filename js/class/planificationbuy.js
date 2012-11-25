@@ -2,6 +2,7 @@ PlanificationBuy = new Class({
     Extends: Planification,
     initialize: function(unitType) {
         this.parent();
+        this.type = 'Buy';
         this.unitType = unitType;
     },
     isAuthorised: function() {

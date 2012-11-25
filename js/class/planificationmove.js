@@ -2,6 +2,7 @@ PlanificationMove = new Class({
     Extends: Planification,
     initialize: function(unit, where) {
         this.parent();
+        this.type = 'Move';
         this.unit = unit;
         this.where = where;
     },

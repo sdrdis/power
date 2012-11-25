@@ -2,6 +2,7 @@ PlanificationFusion = new Class({
     Extends: Planification,
     initialize: function(position, involvedUnits) {
         this.parent();
+        this.type = 'Fusion';
         this.position = position;
         this.involvedUnits = involvedUnits;
     },

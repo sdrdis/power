@@ -46,7 +46,7 @@ Player = new Class({
         // Search if a move is already planned for this unit
         for (var i=0 ; i<this.planifications.length ; i++) {
             var existing = this.planifications[i];
-            if (instanceOf(existing, PlanificationMove) && existing.unit.id == unit.id) {
+            if (existing.type == 'Move' && existing.unit.id == unit.id) {
                 conflicting = i;
             }
         }
@@ -126,7 +126,7 @@ Player = new Class({
     getUnitPositionAfterPlanification : function(unit) {
         var destination = unit.position;
         this.planifications.forEach(function(plan) {
-            if (instanceOf(plan, Planificationmove) && plan.unit.id == unit.id) {
+            if (plan.type == 'Move' && plan.unit.id == unit.id) {
                 destination = plan.where;
             }
         });
@@ -142,10 +142,10 @@ Player = new Class({
     isFusionning : function(unit) {
         var fusionning = false;
         this.planifications.forEach(function(p) {
-            if (instanceOf(p, PlanificationFusion) && p.isInvolved(unit)) {
+            if (p.type == 'Fusion' && p.isInvolved(unit)) {
                 fusionning = true;
             }
-            if (instanceOf(p, PlanificationMissile) && p.isInvolved(unit)) {
+            if (p.type == 'Missile' && p.isInvolved(unit)) {
                 fusionning = true;
             }
         });
@@ -166,7 +166,7 @@ Player = new Class({
     getBuyingPlanifications: function() {
     	var planifications = [];
     	this.planifications.forEach(function(planification) {
-            if (instanceOf(planification, PlanificationBuy)) {
+            if (planification.type == 'Buy') {
             	planifications.push(planification);
             }
         });
