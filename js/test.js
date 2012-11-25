@@ -1,17 +1,29 @@
 
 $(document).ready(function() {
 
-    Game.createPlayers(1);
+    Game.createPlayers(4);
     var player_1 = Game.players[0];
     var soldier_1 = player_1.createUnit('Soldier');
     var soldier_2 = player_1.createUnit('Soldier');
     var soldier_3 = player_1.createUnit('Soldier');
     var soldier_4 = player_1.createUnit('Soldier');
+    var destroyer_1 = player_1.createUnit('Destroyer');
 
     player_1.planifyFusion(soldier_1.position, [soldier_1, soldier_2, soldier_3]);
     player_1.planifyMove(soldier_1, {x: 1, y: 1});
     player_1.planifyMove(soldier_4, {x: 2, y: 2});
+    player_1.planifyMove(destroyer_1, {x: 1, y: 1});
     player_1.resolvePlanifications();
+
+
+    var player_2 = Game.players[1];
+    player_2.createUnit('JetFighter');
+    player_2.createUnit('JetFighter');
+    player_2.createUnit('JetFighter');
+    player_2.createUnit('Tank');
+    player_2.createUnit('Tank');
+    player_2.createUnit('Tank');
+    player_2.createUnit('Tank');
 
     console.log(player_1.units);
 
@@ -19,6 +31,9 @@ $(document).ready(function() {
         game: Game
     });
 
+    $('.game').power('refresh');
+    player_1.planifyMove(destroyer_1, {x: 2, y: 1});
+    player_1.resolvePlanifications();
     $('.game').power('refresh');
 
     return;

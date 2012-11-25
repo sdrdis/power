@@ -22,16 +22,11 @@ GroundUnit = new Class({
         ];
         
         var authorised = false;
-        var self = this;
         rooms.forEach(function(room) {
-            if (self._isCellInsideRoom(old_position, room) && self._isCellInsideRoom(new_position, room)) {
+            if (Game.isCellInsideRoom(old_position, room) && Game.isCellInsideRoom(new_position, room)) {
                 authorised = true;
             }
         });
         return authorised;
-    },
-
-    _isCellInsideRoom: function(cell, room) {
-        return cell.x >= room.x1 && cell.x <= room.x2 && cell.y >= room.y1 && cell.y <= room.y2;
     }
 });

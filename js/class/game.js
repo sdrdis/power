@@ -7,9 +7,9 @@ Game = new new Class({
         this.map = new Map();
         var starting_positions = {
             1: {x: 0, y: 0},
-            2: {x: 0, y: this.map.height - 1},
-            3: {x: this.map.width - 1, y: 0},
-            4: {x: this.map.width - 1, y: this.map.height - 1}
+            2: {x: 0, y: 8},
+            3: {x: 8, y: 0},
+            4: {x: 8, y: 8}
         };
         for (var i=1; i<=playerCount ; i++) {
             var player = new Player(i, 'Player ' + i, starting_positions[i]);
@@ -57,8 +57,120 @@ Game = new new Class({
         return units;
     },
     nextRound: function() {
+        this.resolvePlanifications();
+        this.resolveFights();
+        this.earnGold();
+        this.resolveDead();
+        this.getUnitsOnMap().forEach(function(cell) {
+            cell.units.forEach(function(unit) {
+                unit.has_moved = false;
+            });
+        });
+    },
+    resolvePlanifications : function() {
         this.players.forEach(function(player) {
             player.resolvePlanifications();
         });
+    },
+    findPlayer : function(id) {
+        var found = false;
+        Object.forEach(this.players, function(player) {
+            if (player.id == id) {
+                found = player;
+            }
+        });
+        return found;
+    },
+    resolveFights : function() {
+        this.resolveMissile();
+        this.getUnitsOnMap().forEach(function(cell) {
+            var players = {};
+            cell.units.forEach(function(unit) {
+                if (!players[unit.player.id]) {
+                    players[unit.player.id] = 0;
+                }
+                players[unit.player.id] += unit.power;
+            });
+
+            // FIGHT
+            if (Object.keys(players).length > 1) {
+                var max_score = 0;
+                Object.forEach(players, function(score, id) {
+                    max_score = Math.max(score, max_score);
+                });
+                var win_count = 0;
+                var win_id = 0;
+                Object.forEach(players, function(score, id) {
+                    if (max_score == score) {
+                        win_count++;
+                        win_id = id;
+                    }
+                });
+                var win_player = Game.findPlayer(win_id);
+                cell.units.forEach(function(unit) {
+                    // Either tied
+                    if (win_count > 1) {
+                        unit.remove();
+                    }
+                    if (unit.player.id != win_id) {
+                        win_player.createUnit(unit.type);
+                        unit.remove();
+                    }
+                });
+            }
+        });
+    },
+    resolveMissile : function() {
+        this.getUnitsOnMap().forEach(function(cell) {
+            cell.units.forEach(function(unit) {
+                if (unit.type == 'Missile' && unit.hasMoved()) {
+                    cell.units.forEach(function() {
+                        unit.remove();
+                    });
+                }
+            });
+        });
+    },
+    earnGold : function() {
+        var rooms = [
+            {id : 1, x1:1, y1:1, x2:3, y2:3},
+            {id : 2, x1:1, y1:5, x2:3, y2:7},
+            {id : 3, x1:5, y1:1, x2:7, y2:3},
+            {id : 4, x1:5, y1:5, x2:7, y2:7}
+        ];
+        this.players.forEach(function(player) {
+            var earnedRooms = [];
+            player.units.forEach(function(unit) {
+                rooms.forEach(function(room) {
+                    if (player.id != room.id && Game.isCellInsideRoom(unit.position, room)) {
+                        if (!earnedRooms.contains(room.id)) {
+                            earnedRooms.push(room.id);
+                        }
+                    }
+                });
+            });
+            player.gold += Math.min(earnedRooms.length, 3);
+            console.log('Player ', player.id, ' earned ', Math.min(earnedRooms.length, 3));
+        });
+    },
+    resolveDead : function() {
+        // Check HQ invasion
+        Game.players.forEach(function(looser) {
+            Game.getUnitsOnCell(looser.hq).forEach(function(unit) {
+                if (unit.player.id != looser.id) {
+                    var winner = unit.player;
+                    console.log('Player ', winner.id, ' won over player ', looser.id);
+                    // Transfer units Ownership
+                    looser.units.forEach(function(unit) {
+                        winner.createUnit(unit.type);
+                        unit.remove();
+                    });
+                    looser.gameOver = true;
+                }
+            });
+        });
+    },
+    isCellInsideRoom: function(cell, room) {
+        return cell.x >= room.x1 && cell.x <= room.x2 && cell.y >= room.y1 && cell.y <= room.y2;
     }
 });
