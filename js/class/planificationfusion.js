@@ -1,6 +1,7 @@
 PlanificationFusion = new Class({
     Extends: Planification,
     initialize: function(unit) {
+        this.parent();
         this.unit = unit;
     },
     isAuthorised: function() {
