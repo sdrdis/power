@@ -5,19 +5,19 @@ $.widget("power.power", {
         game: null,
         playersInformations: {
 			1: {
-				team: 'chicken',
+				team: 'rabbit',
 				name: 'Player 1'
 			},
 			2: {
-				team: 'cow',
+				team: 'pig',
 				name: 'Player 2'
 			},
 			3: {
-				team: 'pig',
+				team: 'chicken',
 				name: 'Player 3'
 			},
 			4: {
-				team: 'rabbit',
+				team: 'cow',
 				name: 'Player 4'
 			},
 		},
