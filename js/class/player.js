@@ -150,6 +150,27 @@ Player = new Class({
             }
         });
         return fusionning;
+    },
+
+    getAvailableGold: function() {
+        var availableGold = this.gold;
+        
+        var buyingPlanifications = this.getBuyingPlanifications();
+        buyingPlanifications.forEach(function(buyingPlanification) {
+        	availableGold -= window[buyingPlanification.unitType].cost;
+        });
+        
+        return availableGold;
+    },
+    
+    getBuyingPlanifications: function() {
+    	var planifications = [];
+    	this.planifications.forEach(function(planification) {
+            if (instanceOf(planification, PlanificationBuy)) {
+            	planifications.push(planification);
+            }
+        });
+    	return planifications;
     }
 });
 

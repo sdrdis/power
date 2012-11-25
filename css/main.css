@@ -231,6 +231,11 @@
     height: 33.3333333%;
 }
 
+.unit_display_4 .unit {
+    width: 25%;
+    height: 25%;
+}
+
 /* VIEW */
 .units_list {
     overflow: hidden;
@@ -278,6 +283,11 @@
 }
 
 /* BUY ITEM */
+
+.buy_list, .buying_list {
+	overflow: hidden;
+}
+
 .buy_list_item {
   float: left;
   width: 128px;

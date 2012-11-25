@@ -5,14 +5,7 @@ PlanificationBuy = new Class({
         this.unitType = unitType;
     },
     isAuthorised: function() {
-        var availableGold = this.player.gold;
-        // Check previous buyings
-        this.player.planifications.forEach(function(planification) {
-            if (planification[0] == 'buy') {
-                availableGold -= window[planification[1]]['cost'];
-            }
-        });
-        return window[this.unitType]['cost'] <= availableGold;
+        return window[this.unitType]['cost'] <= this.player.getAvailableGold();
     },
     resolve: function() {
         this.player.createUnit(this.unitType);
