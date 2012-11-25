@@ -141,7 +141,7 @@ Player = new Class({
     
     isFusionning : function(unit) {
         var fusionning = false;
-        this.player.planifications.forEach(function(p) {
+        this.planifications.forEach(function(p) {
             if (instanceOf(p, PlanificationFusion) && p.isInvolved(unit)) {
                 fusionning = true;
             }
