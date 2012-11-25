@@ -278,6 +278,11 @@
 }
 
 /* BUY ITEM */
+
+.buy_list, .buying_list {
+	overflow: hidden;
+}
+
 .buy_list_item {
   float: left;
   width: 128px;

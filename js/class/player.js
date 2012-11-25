@@ -133,12 +133,23 @@ Player = new Class({
 
     getAvailableGold: function() {
         var availableGold = this.gold;
-        this.planifications.forEach(function(planification) {
+        
+        var buyingUnits = this.getBuyingUnits();
+        buyingUnits.forEach(function(buyingUnit) {
+        	availableGold -= new window[buyingUnit.unit]().power; //@todo: to be improved
+        });
+        
+        return availableGold;
+    },
+    
+    getBuyingUnits: function() {
+    	var units = [];
+    	this.planifications.forEach(function(planification) {
             if (instanceOf(planification, PlanificationBuy)) {
-                availableGold -= new window[planification.unitType]().power; //@todo: to be improved
+            	units.push({unit: planification.unitType, planification: planification});
             }
         });
-        return availableGold;
+    	return units;
     }
 });
 

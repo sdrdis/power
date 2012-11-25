@@ -355,6 +355,34 @@ $.widget("power.power", {
         this.instances.mainView.html('');
         var $buy = $('<div class="buy"></div>');
         $buy.appendTo(this.instances.mainView);
+        
+        
+        
+        var buyingUnits = this.players[this.playerSelected].getBuyingUnits();
+        
+        if (buyingUnits.length > 0) {
+	        var $buyingLabel = $('<div class="buying_label"></div>');
+	        var $buyingList = $('<div class="buying_list"></div>');
+	        $buyingLabel.text(_('Will be bought units'));
+	        $buyingLabel.appendTo(this.instances.mainView);
+	        $buyingList.appendTo(this.instances.mainView);
+	        for (var i = 0; i < buyingUnits.length; i++) {
+	        	this._displayUnit(
+	        			buyingUnits[i].unit,
+	        			$buyingList,
+	            		_('Cancel'),
+	            		{planification: buyingUnits[i].planification},
+	            		function() {
+	            			var planification = $(this).data('data').planification;
+	            			console.log(planification);
+	            			planification.cancel();
+	                        self.refresh();
+	                        self._showBuyView();
+	                    }
+	    		);
+	        }
+        }
+        
         var $buyLabel = $('<div class="buy_label"></div>');
         var $buyList = $('<div class="buy_list"></div>');
         $buyLabel.appendTo(this.instances.mainView);
@@ -362,31 +390,42 @@ $.widget("power.power", {
 
         $buyLabel.text(_('Buy units'));
         for (var i = 0; i < this.options.buyableUnits.length; i++) {
-            var buyableUnit = this.options.buyableUnits[i];
-            var cost = new window[buyableUnit]().power; //@todo: to be improved
-
-            var $item = $('<div class="buy_list_item"></div>');
-            $item.appendTo($buyList);
-            var $item_image = $('<div class="buy_list_item_image"></div>');
-            var $item_label = $('<div class="buy_list_item_label"></div>');
-            var $item_action_zone = $('<div class="buy_list_item_action_zone"></div>');
-            $item_image.appendTo($item);
-            $item_label.appendTo($item);
-            $item_action_zone.appendTo($item);
-
-            $item_image
-                .addClass(buyableUnit.toLowerCase())
-                .addClass(this.options.team[this.playerSelected]);
-            $item_label.text(strtr(_('{cost} power'), {cost: cost}));
-
-            var $item_button = $('<input type="button" />').val(_('Buy'));
-            $item_button.appendTo($item_action_zone);
-            $item_button.data('unit', buyableUnit);
-            $item_button.click(function() {
-                self.players[self.playerSelected].planifyBuy($(this).data('unit'));
-                self.refresh();
-                self._showBuyView();
-            });
+            this._displayUnit(
+            		this.options.buyableUnits[i],
+            		$buyList,
+            		_('Buy'),
+            		{},
+            		function() {
+                        self.players[self.playerSelected].planifyBuy($(this).data('unit'));
+                        self.refresh();
+                        self._showBuyView();
+                    }
+    		);
         }
+    },
+    
+    _displayUnit: function(buyableUnit, $appendTo, label, data, callback) {
+    	var self = this;
+        var cost = new window[buyableUnit]().power; //@todo: to be improved
+
+        var $item = $('<div class="buy_list_item"></div>');
+        $item.appendTo($appendTo);
+        var $item_image = $('<div class="buy_list_item_image"></div>');
+        var $item_label = $('<div class="buy_list_item_label"></div>');
+        var $item_action_zone = $('<div class="buy_list_item_action_zone"></div>');
+        $item_image.appendTo($item);
+        $item_label.appendTo($item);
+        $item_action_zone.appendTo($item);
+
+        $item_image
+            .addClass(buyableUnit.toLowerCase())
+            .addClass(this.options.team[this.playerSelected]);
+        $item_label.text(strtr(_('{cost} power'), {cost: cost}));
+
+        var $item_button = $('<input type="button" />').val(label);
+        $item_button.appendTo($item_action_zone);
+        $item_button.data('unit', buyableUnit);
+        $item_button.data('data', data);
+        $item_button.click(callback);
     }
 });
