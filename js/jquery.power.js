@@ -36,6 +36,21 @@ $.widget("power.power", {
 			'Destroyer': {
 				'label': 'destroyer'
 			},
+			'Regiment': {
+				'label': 'regiment'
+			},
+			'Assault': {
+				'label': 'assault tank'
+			},
+			'JetBomber': {
+				'label': 'jet bomber'
+			},
+			'BattleCruiser': {
+				'label': 'battlecruiser'
+			},
+			'Missile': {
+				'label': 'missile'
+			},
 		}
     },
     instances: {
@@ -60,8 +75,7 @@ $.widget("power.power", {
     _create: function() {
         var players = this.options.game.players;
         for (var i = 0; i < players.length; i++) {
-            this.players[players[i].id] = players[i];
-            this.players[players[i].id].gold = 200;
+        	this.players[players[i].id] = players[i];
         }
 
         this.instances.map.main = $('<div class="map"></div>');
@@ -112,7 +126,7 @@ $.widget("power.power", {
 
         var playerName = this.options.playersInformations[this.playerSelected].name;
         $playerName.text(strtr('{playerName}', {playerName: playerName}));
-        $playerPower.html(strtr('{power} <img src="images/minipower.png" width="30" height="30" />', {power: this.players[this.playerSelected].getAvailableGold()}));
+        $playerPower.html(strtr('<div>{power}</div> <img src="images/minipower.png" width="30" height="30" />', {power: this.players[this.playerSelected].getAvailableGold()}));
         $playerRound.append($buttonNext);
         $buttonNext.val('Next');
         $buttonNext.click(function() {
@@ -342,8 +356,8 @@ $.widget("power.power", {
         }
         self._refreshDrawZone();
         var $gridItem = this.instances.map.gridItems[position.x][position.y];
-        this.instances.map.grid.find('.grid_item').removeClass('selected');
-        $gridItem.addClass('selected');
+        this.instances.map.touchZone.find('.grid_item').removeClass('selected');
+        $gridItem.data('touch').addClass('selected');
         this._trigger('selectGrid', {position: position});
 
         this.instances.mainView.html('');
@@ -437,6 +451,7 @@ $.widget("power.power", {
         	this.refresh();
             this.unitsSelected[unit.id] = unit;
             this._refreshUnitsView();
+            playSound(unit.type.toLowerCase());
             return true;
         }
         return false;
@@ -497,6 +512,8 @@ $.widget("power.power", {
             		{},
             		function() {
                         self.players[self.playerSelected].planifyBuy($(this).data('unit'));
+                        console.log($(this).data('unit'));
+                        playSound($(this).data('unit').toLowerCase(), true);
                         self.refresh();
                         self._showBuyView();
                     }
@@ -583,30 +600,56 @@ $.widget("power.power", {
     		$planificationsEvents.appendTo($description);
     		
     		$.each(this.lastEvents.fights, function(key, fight) {
-    			var fight = this.lastEvents.fights[key];
     			var $planificationsFight = $('<div class="planifications_fight"></div>');
     			var playerIds = [];
     			for (var key in fight.scores) {
     				playerIds.push(key);
     			}
-    			console.log(fight);
-    			$planificationsFight.text(strtr(
-    					_('Fight on [{x}, {y}] between {player1} ({score1}) and {player2} ({score2})'),
+    			
+    			if (fight.tied) {
+    				$planificationsFight.text(strtr(
+        					_('Tight fight on [{x}, {y}] between {player1} ({score1}) and {player2} ({score2}). All player lost their units!'),
+        					{
+        						x: fight.position.x,
+        						y: fight.position.y,
+        						player1: self.options.playersInformations[playerIds[0]].name,
+        						score1: fight.scores[playerIds[0]],
+        						player2: self.options.playersInformations[playerIds[1]].name,
+        						score2: fight.scores[playerIds[1]]
+        					}
+    					)
+        			);
+    			} else {
+    				$planificationsFight.text(strtr(
+        					_('Fight on [{x}, {y}] between {player1} ({score1}) and {player2} ({score2}). Winner is {playerWinner}!'),
+        					{
+        						x: fight.position.x,
+        						y: fight.position.y,
+        						player1: self.options.playersInformations[playerIds[0]].name,
+        						score1: fight.scores[playerIds[0]],
+        						player2: self.options.playersInformations[playerIds[1]].name,
+        						score2: fight.scores[playerIds[1]],
+        						playerWinner: self.options.playersInformations[fight.winner.id].name,
+        					}
+    					)
+        			);
+    			}
+    			
+    			$planificationsFight.appendTo($description);
+    		});
+    		$.each(this.lastEvents.missiles, function(key, missile) {
+    			var $planificationsMissile = $('<div class="planifications_missile"></div>');
+    			$planificationsMissile.text(strtr(
+    					_('Missile sent on [{x}, {y}]. Boom!'),
     					{
-    						x: fight.position.x,
-    						y: fight.position.y,
-    						player1: this.options.playersInformations[playerIds[0]],
-    						score1: fight.scores[playerIds[0]],
-    						player2: this.options.playersInformations[playerIds[1]],
-    						score2: fight.scores[playerIds[1]]
+    						x: missile.x,
+    						y: missile.y
     					}
 					)
     			);
-    			$planificationsFight.appendTo($description);
-    		});
     			
-    		
-    		console.log(this.lastEvents);
+    			$planificationsMissile.appendTo($description);
+    		});
     	}
     },
     
