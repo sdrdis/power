@@ -17,22 +17,13 @@ Player = new Class({
     canPlanify : function() {
         return this.planifications.length < 5;
     },
-    removeConflictingPlanifications : function() {
-        for (var i=0 ; i<this.planifications.length ; i++) {
-            if (!this.planifications[i].isAuthorised()) {
-                this.planifications.splice(i, 1);
-                i--;
-            }
-        }
-    },
     addPlanification: function(planification) {
         planification.player = this;
         // No conflict : can't add more than 5 notifications
-        if (!this.canPlanify()) {
+        if (!this.canPlanify() || !planification.isAuthorised()) {
             return false;
         }
         this.planifications.push(planification);
-        this.removeConflictingPlanifications();
     },
     replacePlanification: function(index, planification) {
         planification.player = this;
@@ -54,6 +45,7 @@ Player = new Class({
     planifyMove : function(unit, where) {
         var planification = new PlanificationMove(unit, where);
         var conflicting = -1;
+        // Search if a move is already planned for this unit
         for (var i=0 ; i<this.planifications.length ; i++) {
             var existing = this.planifications[i];
             if (instanceOf(existing, PlanificationMove) && existing.unit.id == unit.id) {
@@ -65,10 +57,10 @@ Player = new Class({
             if (unit.position.x == where.x && unit.position.y == where.y) {
                 this.cancelPlanification(conflicting);
             } else {
-                this.replacePlanification(index, planification);
+                this.replacePlanification(conflicting, planification);
             }
         } else {
-            this.addPlanification(planification, conflicting);
+            this.addPlanification(planification);
         }
     },
 
