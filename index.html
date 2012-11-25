@@ -40,8 +40,22 @@
       <script type="text/javascript" src="js/class/game.js"></script>
         
         <script type="text/javascript" src="js/main.js"></script>
+
+        <script type="text/javascript">
+            function playSound(son)
+            {
+               document.getElementById("son").innerHTML = "<audio controls='controls' autoplay='autoplay' style='visibility: hidden; display: none;'><source src='sound/soundEffects/" + son + "Short.mp3' type='audio/mp3'></audio>";
+            }
+        </script>
     </head>
     <body>
+        <audio controls="controls" autoplay="autoplay" loop="loop" style="">
+            <source src="sound/musics/musicHQ.128kbps.mp3" type="audio/mp3">
+            Le navigateur ne supporte pas l'audio.
+        </audio>
+
+        <div id="son">
+        </div>
         <div class="game">
         </div>
     </body>
