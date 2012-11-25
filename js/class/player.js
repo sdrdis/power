@@ -137,7 +137,7 @@ Player = new Class({
         var availableGold = this.gold;
         this.planifications.forEach(function(planification) {
             if (instanceOf(planification, PlanificationBuy)) {
-                availableGold -= new window[planification.unitType].power; //@todo: to be improved
+                availableGold -= new window[planification.unitType]().power; //@todo: to be improved
             }
         });
         return availableGold;

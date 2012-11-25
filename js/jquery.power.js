@@ -385,6 +385,7 @@ $.widget("power.power", {
             $item_button.click(function() {
                 self.players[self.playerSelected].planifyBuy($(this).data('unit'));
                 self.refresh();
+                self._showBuyView();
             });
         }
     }
