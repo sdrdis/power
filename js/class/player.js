@@ -129,7 +129,7 @@ Player = new Class({
         return fusionning;
     },
     getUnitsOnCellByState: function(position) {
-        var states = {
+        return {
             'staying' : this.getUnitsStayingCell(position),
             'incoming' : this.getUnitsIncomingCell(position),
             'leaving' : this.getUnitsLeavingCell(position),
