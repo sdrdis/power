@@ -542,7 +542,7 @@ $.widget("power.power", {
             .addClass(this.options.playersInformations[this.playerSelected].team);
         $item_label.text(strtr(_('{cost} power'), {cost: cost}));
 
-        var $item_button = $('<input type="button" />').val(label);
+        var $item_button = $('<button type="button">' + strtr(_('Buy for {cost}'), {cost: cost}) + ' <img src="images/minipower.png" width="20" height="20"> </button>');
         $item_button.appendTo($item_action_zone);
         $item_button.data('unit', buyableUnit);
         $item_button.data('data', data);
