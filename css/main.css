@@ -364,7 +364,7 @@ body {
   height: 30px;
 }
 
-.buy_list_item_action_zone button {
+.buy_list_item_action_zone button, .units_fusion input {
   margin-left: 1px;
   width: 126px;
   height: 30px;
