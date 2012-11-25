@@ -148,7 +148,7 @@ Player = new Class({
     
     isMoving : function(unit) {
         var start = unit.position;
-        var destination = unit.getUnitPositionAfterPlanification();
+        var destination = this.getUnitPositionAfterPlanification(unit);
         return start.x != destination.x || start.y != destination.y;
     },
     
