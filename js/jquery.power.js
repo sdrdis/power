@@ -22,7 +22,21 @@ $.widget("power.power", {
 			},
 		},
         nbPlayer: 4,
-        buyableUnits: ['Soldier', 'Tank', 'JetFighter', 'Destroyer']
+        buyableUnits: ['Soldier', 'Tank', 'JetFighter', 'Destroyer'],
+        unitsInformations: {
+			'Soldier': {
+				'label': 'soldier'
+			},
+			'Tank': {
+				'label': 'tank'
+			},
+			'JetFighter': {
+				'label': 'jet fighter'
+			},
+			'Destroyer': {
+				'label': 'destroyer'
+			},
+		}
     },
     instances: {
         map: {
@@ -101,7 +115,22 @@ $.widget("power.power", {
             if (self.playerSelected == self.options.nbPlayer) {
             	self.lastPlanifications = {};
             	for (var key in self.players) {
-            		self.lastPlanifications[key] = self.players[key].planifications;
+            		self.lastPlanifications[key] = [];
+            		self.players[key].planifications.forEach(function(planification) {
+            			var tempPlayer = planification.player;
+            			planification.player = null;
+            			if (planification.unit) {
+            				planification.unit.player = null;
+            			}
+            			var clonedPlanification = Object.clone(planification);
+            			clonedPlanification.player = tempPlayer;
+            			planification.player = tempPlayer;
+            			if (planification.unit) {
+            				planification.unit.player = tempPlayer;
+            			}
+            			self.lastPlanifications[key].push(clonedPlanification);
+            			
+            		});
             	}
                 self.options.game.nextRound();
                 self.playerSelected = 1;
@@ -260,7 +289,7 @@ $.widget("power.power", {
             for (var j = 0; j < unitsList.length; j++) {
                 var unit = unitsList[j];
 
-                var unitType = unit.type;
+                var unitType = unit.type.toLowerCase();
                 var $unit = $('<div class="unit"></div>')
                     .addClass(unitType)
                     .addClass(this.options.playersInformations[unit.player.id].team);
@@ -273,6 +302,9 @@ $.widget("power.power", {
                 $touchUnit.data('unit', unit);
 
                 $touchUnit.click(function() {
+                	for (var i in self.unitsSelected) {
+                		return true;
+                	}
                     self.preSelectedUnit = $(this).data('unit');
                 });
             }
@@ -317,7 +349,7 @@ $.widget("power.power", {
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
             var $unitItem = $('<div class="unit_item"></div>');
-            $unitItem.addClass(unit.type)
+            $unitItem.addClass(unit.type.toLowerCase())
                 .addClass(this.options.playersInformations[unit.player.id].team);
             $unitItem.appendTo($unitsList);
             var $unitItemHover = $('<div class="unit_item_hover"></div>');
@@ -338,6 +370,7 @@ $.widget("power.power", {
 
     selectUnit: function(unit) {
         if (unit.player.id == this.playerSelected) {
+        	this.refresh();
             this.unitsSelected[unit.id] = unit;
             this._refreshUnitsView();
             return true;
@@ -365,6 +398,8 @@ $.widget("power.power", {
 
     _showBuyView: function() {
         var self = this;
+        this.refresh();
+        this.unitsSelected = {};
         this.instances.mainView.html('');
         var $buy = $('<div class="buy"></div>');
         $buy.appendTo(this.instances.mainView);
@@ -456,6 +491,7 @@ $.widget("power.power", {
     			$planificationsPlayer.appendTo($description);
     			$planificationsPlayerList.appendTo($description);
     			$planificationsPlayer.text(this.options.playersInformations[key].name);
+    			console.log(this.lastPlanifications[key]);
     			this.lastPlanifications[key].forEach(function(planification) {
     				self._showPlanification(planification)
     					.appendTo($planificationsPlayerList);
@@ -466,9 +502,23 @@ $.widget("power.power", {
     
     _showPlanification: function(planification) {
     	var $item = $('<div class="planification_item"></div>');
+    	$item.addClass(planification.type.toLowerCase());
     	if (instanceOf(planification, PlanificationBuy)) {
-    		console.log(planification);
+    		$item.text(strtr(_('Buy {unitType}'), {unitType: this._getUnitTypeLabel(planification.unitType)}));
+    	}
+    	if (instanceOf(planification, PlanificationMove)) {
+    		$item.text(strtr(_('Move {unitType} from [{fromX}, {fromY}] to [{toX}, {toY}]'), {
+    			unitType: this._getUnitTypeLabel(planification.unit.type),
+    			fromX: planification.unit.position.x,
+    			fromY: planification.unit.position.y,
+    			toX: planification.where.x,
+    			toY: planification.where.y,
+    		}));
     	}
     	return $item;
+    },
+    
+    _getUnitTypeLabel: function(unitType) {
+    	return this.options.unitsInformations[unitType].label;
     }
 });
