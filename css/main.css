@@ -188,6 +188,10 @@ body {
     height: 100%;
 }
 
+.grid .grid_item .unit {
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
 .grid .grid_item, .touch_zone .grid_item {
     position: absolute;
     width: 11.111111111%;

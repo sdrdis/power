@@ -106,6 +106,16 @@ $.widget("power.power", {
             }
         }
     },
+    
+    _nextPlayer: function() {
+    	this.playerSelected++;
+    	if (this.playerSelected > this.options.nbPlayer) {
+    		this.playerSelected = 1;
+    	}
+    	if (this.players[this.playerSelected].gameOver) {
+    		this._nextPlayer();
+    	}
+    },
 
     _refreshTopView: function() {
         var self = this;
@@ -161,10 +171,21 @@ $.widget("power.power", {
             		});
             	}
                 self.lastEvents = self.options.game.nextRound();
-                self.playerSelected = 1;
-            } else {
-                self.playerSelected++;
             }
+            
+            var gameOverCount = 0;
+            for (var key in self.players) {
+            	if (self.players[key].gameOver) {
+            		gameOverCount++;
+            	}
+            }
+            
+            if (gameOverCount >= this.options.nbPlayer - 1) {
+            	alert('GameOver! TODO: better display...');
+            }
+            
+            self._nextPlayer();
+            
             self.refresh();
             self._showStartingView();
         });
