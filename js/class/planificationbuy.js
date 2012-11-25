@@ -13,9 +13,6 @@ PlanificationBuy = new Class({
         });
         return window[this.unitType]['cost'] <= availableGold;
     },
-    checkDuplicate : function(against) {
-        return false;
-    },
     resolve: function() {
         this.player.createUnit(this.unitType);
         this.player.gold -= window[this.unitType]['cost'];

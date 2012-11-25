@@ -54,6 +54,7 @@ Player = new Class({
     planifyMove : function(unit, where) {
         var planification = new PlanificationMove(unit, where);
         var conflicting = -1;
+        // Search if a move is already planned for this unit
         for (var i=0 ; i<this.planifications.length ; i++) {
             var existing = this.planifications[i];
             if (instanceOf(existing, PlanificationMove) && existing.unit.id == unit.id) {

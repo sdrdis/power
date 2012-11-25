@@ -7,9 +7,6 @@ PlanificationMove = new Class({
     isAuthorised: function() {
         return this.unit.canMove(this.where);
     },
-    checkDuplicate : function(against) {
-        return instanceOf(against, PlanificationMove) && this.unit.id == against.unit.id;
-    },
     resolve: function() {
         this.unit.moveTo(this.where);
     }
