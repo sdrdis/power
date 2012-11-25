@@ -58,7 +58,7 @@ Game = new new Class({
     },
     nextRound: function() {
         this.resolvePlanifications();
-        this.resolveFights();
+        var fights = this.resolveFights();
         this.earnGold();
         this.resolveDead();
         this.getUnitsOnMap().forEach(function(cell) {
@@ -66,6 +66,9 @@ Game = new new Class({
                 unit.has_moved = false;
             });
         });
+        return {
+            fights : fights
+        };
     },
     resolvePlanifications : function() {
         this.players.forEach(function(player) {
@@ -83,42 +86,59 @@ Game = new new Class({
     },
     resolveFights : function() {
         this.resolveMissile();
+        var fights = [];
         this.getUnitsOnMap().forEach(function(cell) {
-            var players = {};
+            var scores = {};
+            var fight = {
+                position : cell.position,
+                tied : false,
+                winner : null
+            };
             cell.units.forEach(function(unit) {
-                if (!players[unit.player.id]) {
-                    players[unit.player.id] = 0;
+                if (!scores[unit.player.id]) {
+                    scores[unit.player.id] = 0;
                 }
-                players[unit.player.id] += unit.power;
+                scores[unit.player.id] += unit.power;
             });
+            fight.scores = scores;
 
             // FIGHT
-            if (Object.keys(players).length > 1) {
+            if (Object.keys(scores).length > 1) {
                 var max_score = 0;
-                Object.forEach(players, function(score, id) {
+                Object.forEach(scores, function(score, id) {
                     max_score = Math.max(score, max_score);
                 });
                 var win_count = 0;
                 var win_id = 0;
-                Object.forEach(players, function(score, id) {
+                Object.forEach(scores, function(score, id) {
                     if (max_score == score) {
                         win_count++;
                         win_id = id;
                     }
                 });
-                var win_player = Game.findPlayer(win_id);
+                Object.forEach(scores, function(score, id) {
+                    if (max_score == score && win_count > 1) {
+                        fight.tied = true;
+                    }
+                });
+                var winner = Game.findPlayer(win_id);
                 cell.units.forEach(function(unit) {
                     // Either tied
                     if (win_count > 1) {
                         unit.remove();
                     }
                     if (unit.player.id != win_id) {
-                        win_player.createUnit(unit.type);
+                        winner.createUnit(unit.type);
                         unit.remove();
                     }
                 });
+                if (!fight.tied) {
+                    fight.winner = winner;
+                }
+                fights.push(fight)
             }
         });
+        return fights;
     },
     resolveMissile : function() {
         this.getUnitsOnMap().forEach(function(cell) {

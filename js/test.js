@@ -25,8 +25,6 @@ $(document).ready(function() {
     player_2.createUnit('Tank');
     player_2.createUnit('Tank');
 
-    console.log(player_1.units);
-
     $('.game').power({
         game: Game
     });
