@@ -2,10 +2,10 @@ Destroyer = new Class({
     Extends: NavalUnit,
     initialize: function(position) {
         this.parent(position);
-        this.type = 'destroyer';
+        this.type = 'Destroyer';
         this.power = 10;
         this.movement = 1;
         this.evolution = 'BattleCruiser';
     }
 });
-Destroyer.power = 10;
+Destroyer.cost = 10;

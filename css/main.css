@@ -1,135 +1,169 @@
 /* POWER INTERFACE MAIN COMPONENTS */
+
+body {
+    font-family : Krungtep, Arial;
+    font-size : 15px;
+	background: url(../images/fond.png) top left fixed;
+	background-size: cover;
+	color: #DDD;
+}
 .game {
     position: relative;
-    width: 966px;
-    height: 706px;
+    width: 1000px;
+    height: 746px;
+    background: url(../images/bordure.png) no-repeat 0 -100px;
+    background-size: 100%;
 }
 
 .map {
     position: absolute;
-    width: 666px;
-    height: 666px;
-    top: 40px;
+    width: 600px;
+    height: 600px;
+    top: 90px;
     left: 0px;
+    z-index : 3;
 }
 
 .main_view {
     position: absolute;
-    left: 666px;
-    width: 300px;
-    top: 40px;
-    height: 666px;
+    left: 650px;
+    width: 350px;
+    top: 150px;
+    height: 1000px;
+    z-index : 2;
 }
 
 .top_view {
     position: absolute;
     left: 0px;
     top: 0px;
-    height: 40px;
+    height: 160px;
     width: 100%;
     overflow: hidden;
+    z-index : 1;
 }
 
 /* UNITS */
 .soldier.pig {
-    background: url(../images/units/pig/soldier.png);
+    background-image: url(../images/units/pig/soldier.png);
 }
 
 .soldier.cow {
-    background: url(../images/units/cow/soldier.png);
+    background-image: url(../images/units/cow/soldier.png);
 }
 
 .soldier.chicken {
-    background: url(../images/units/chicken/soldier.png);
+    background-image: url(../images/units/chicken/soldier.png);
 }
 
 .soldier.rabbit {
-    background: url(../images/units/rabbit/soldier.png);
+    background-image: url(../images/units/rabbit/soldier.png);
 }
 
 
 .tank.pig {
-  background: url(../images/units/pig/tank.png);
+  background-image: url(../images/units/pig/tank.png);
 }
 
 .tank.cow {
-  background: url(../images/units/cow/tank.png);
+  background-image: url(../images/units/cow/tank.png);
 }
 
 .tank.chicken {
-  background: url(../images/units/chicken/tank.png);
+  background-image: url(../images/units/chicken/tank.png);
 }
 
 .tank.rabbit {
-  background: url(../images/units/rabbit/tank.png);
+  background-image: url(../images/units/rabbit/tank.png);
 }
 
 
 .jetfighter.pig {
-  background: url(../images/units/pig/jetfighter.png);
+  background-image: url(../images/units/pig/jetfighter.png);
 }
 
 .jetfighter.cow {
-  background: url(../images/units/cow/jetfighter.png);
+  background-image: url(../images/units/cow/jetfighter.png);
 }
 
 .jetfighter.chicken {
-  background: url(../images/units/chicken/jetfighter.png);
+  background-image: url(../images/units/chicken/jetfighter.png);
 }
 
 .jetfighter.rabbit {
-  background: url(../images/units/rabbit/jetfighter.png);
+  background-image: url(../images/units/rabbit/jetfighter.png);
 }
 
 
 .destroyer.pig {
-  background: url(../images/units/pig/destroyer.png);
+  background-image: url(../images/units/pig/destroyer.png);
 }
 
 .destroyer.cow {
-  background: url(../images/units/cow/destroyer.png);
+  background-image: url(../images/units/cow/destroyer.png);
 }
 
 .destroyer.chicken {
-  background: url(../images/units/chicken/destroyer.png);
+  background-image: url(../images/units/chicken/destroyer.png);
 }
 
 .destroyer.rabbit {
-  background: url(../images/units/rabbit/destroyer.png);
+  background-image: url(../images/units/rabbit/destroyer.png);
 }
 
 
 .regiment.pig {
-  background: url(../images/units/pig/regiment.png);
+  background-image: url(../images/units/pig/regiment.png);
 }
 
 .regiment.cow {
-  background: url(../images/units/cow/regiment.png);
+  background-image: url(../images/units/cow/regiment.png);
 }
 
 .regiment.chicken {
-  background: url(../images/units/chicken/regiment.png);
+  background-image: url(../images/units/chicken/regiment.png);
 }
 
 .regiment.rabbit {
-  background: url(../images/units/rabbit/regiment.png);
+  background-image: url(../images/units/rabbit/regiment.png);
 }
 
 
 .jetbomber.pig {
-  background: url(../images/units/pig/jetbomber.png);
+  background-image: url(../images/units/pig/jetbomber.png);
 }
 
 .jetbomber.cow {
-  background: url(../images/units/cow/jetbomber.png);
+  background-image: url(../images/units/cow/jetbomber.png);
 }
 
 .jetbomber.chicken {
-  background: url(../images/units/chicken/jetbomber.png);
+  background-image: url(../images/units/chicken/jetbomber.png);
 }
 
 .jetbomber.rabbit {
-  background: url(../images/units/rabbit/jetbomber.png);
+  background-image: url(../images/units/rabbit/jetbomber.png);
+}
+
+
+.battlecruiser.pig {
+  background-image: url(../images/units/pig/battlecruiser.png);
+}
+
+.battlecruiser.cow {
+  background-image: url(../images/units/cow/battlecruiser.png);
+}
+
+.battlecruiser.chicken {
+  background-image: url(../images/units/chicken/battlecruiser.png);
+}
+
+.battlecruiser.rabbit {
+  background-image: url(../images/units/rabbit/battlecruiser.png);
+}
+
+.missile {
+	background-image: url(../images/units/megamissile.png);
 }
 
 
@@ -204,9 +238,19 @@
     height: 50%;
 }
 
+.unit_display_2.bigger_horizontal .unit {
+  width: 16.66666666%;
+  margin-left: 22%;
+}
+
 .unit_display_3 .unit {
     width: 33.3333333%;
     height: 33.3333333%;
+}
+
+.unit_display_4 .unit {
+    width: 25%;
+    height: 25%;
 }
 
 /* VIEW */
@@ -238,15 +282,88 @@
     border: 2px solid black;
 }
 
+.units_fusion, .units_missile {
+	display: none;
+}
+
+.units_fusion.active, .units_missile.active {
+	display: block;
+}
+
 /* TOP VIEW */
 .top_view .player_name, .top_view .player_power {
-    float: left;
+    position: absolute;
+    top: 25px;
+    left : 20px;
+    font-weight: bold;
 }
 
 .top_view .player_power {
-    margin-left: 20px;
+    position: absolute;
+    top: 25px;
+    left : 100px;
+}
+
+.top_view .player_buy {
+    position : absolute;
+    top : 10px;
+    left : 660px;
 }
 
 .top_view .player_round {
-    float: right;
+    position : absolute;
+    top : 10px;
+    right : 40px;
+}
+
+/* BUY ITEM */
+
+.buy_label {
+  color : #dbb80a;
+  font-weight: bold;
+  font-size: 20px;
+}
+.buy_list, .buying_list {
+	overflow: hidden;
+}
+
+.buy_list_item {
+  float: left;
+  width: 128px;
+  height: 178px;
+  overflow: hidden;
+}
+
+.buy_list_item_image {
+  width: 128px;
+  height: 128px;
+  background-size: 100% 100%;
+}
+
+.buy_list_item_label {
+  width: 128px;
+  height: 20px;
+  display:none;
+}
+
+.buy_list_item_action_zone {
+  width: 128px;
+  height: 30px;
+}
+
+.buy_list_item_action_zone button {
+  margin-left: 1px;
+  width: 126px;
+  height: 30px;
+  line-height: 30px;
+  vertical-align: middle;
+  background-color: #de2a00;
+  color : #dbb80a;
+  font-weight: bold;
+  border: 1px solid #a01e00;
+  font-size: 15px;
+  cursor: pointer;
+}
+.buy_list_item_action_zone button image {
+    vertical-align: middle;
 }

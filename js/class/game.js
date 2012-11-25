@@ -7,9 +7,9 @@ Game = new new Class({
         this.map = new Map();
         var starting_positions = {
             1: {x: 0, y: 0},
-            2: {x: 0, y: this.map.height - 1},
-            3: {x: this.map.width - 1, y: 0},
-            4: {x: this.map.width - 1, y: this.map.height - 1}
+            2: {x: 0, y: 8},
+            3: {x: 8, y: 0},
+            4: {x: 8, y: 8}
         };
         for (var i=1; i<=playerCount ; i++) {
             var player = new Player(i, 'Player ' + i, starting_positions[i]);
@@ -57,8 +57,151 @@ Game = new new Class({
         return units;
     },
     nextRound: function() {
+        this.resolvePlanifications();
+        var missiles = this.resolveMissile();
+        var fights = this.resolveFights();
+        this.earnGold();
+        this.resolveDead();
+        this.getUnitsOnMap().forEach(function(cell) {
+            cell.units.forEach(function(unit) {
+                unit.hasMoved = false;
+            });
+        });
+        return {
+            fights : fights,
+            missiles : missiles
+        };
+    },
+    resolvePlanifications : function() {
         this.players.forEach(function(player) {
             player.resolvePlanifications();
         });
+    },
+    findPlayer : function(id) {
+        var found = false;
+        Object.forEach(this.players, function(player) {
+            if (player.id == id) {
+                found = player;
+            }
+        });
+        return found;
+    },
+    resolveFights : function() {
+        var fights = [];
+        this.getUnitsOnMap().forEach(function(cell) {
+            var scores = {};
+            var fight = {
+                position : cell.position,
+                tied : false,
+                winner : null
+            };
+            cell.units.forEach(function(unit) {
+                if (!scores[unit.player.id]) {
+                    scores[unit.player.id] = 0;
+                }
+                scores[unit.player.id] += unit.power;
+            });
+            fight.scores = scores;
+
+            // FIGHT
+            if (Object.keys(scores).length > 1) {
+                var max_score = 0;
+                Object.forEach(scores, function(score, id) {
+                    max_score = Math.max(score, max_score);
+                });
+                var win_count = 0;
+                var win_id = 0;
+                Object.forEach(scores, function(score, id) {
+                    if (max_score == score) {
+                        win_count++;
+                        win_id = id;
+                    }
+                });
+                Object.forEach(scores, function(score, id) {
+                    if (max_score == score && win_count > 1) {
+                        fight.tied = true;
+                    }
+                });
+
+                var winner = Game.findPlayer(win_id);
+                if (!fight.tied) {
+                    fight.winner = winner;
+                }
+
+                for (var i=0 ; i<cell.units.length ; i++) {
+                    var unit = cell.units[i];
+                    // Either tied
+                    if (fight.tied) {
+                        unit.remove();
+                        cell.units.splice(i, 1);
+                        i--;
+                    } else if (unit.player.id != win_id) {
+                        winner.createUnit(unit.type);
+                        unit.remove();
+                        cell.units.splice(i, 1);
+                        i--;
+                    }
+                }
+                fights.push(fight)
+            }
+        });
+        return fights;
+    },
+    resolveMissile : function() {
+        var missiles = [];
+        this.getUnitsOnMap().forEach(function(cell) {
+            cell.units.forEach(function(unit) {
+                if (unit.type == 'Missile' && unit.hasMoved) {
+                    missiles.push(cell.position);
+                    Game.getUnitsOnCell(cell.position).forEach(function(unit) {
+                        unit.remove();
+                    });
+                }
+            });
+        });
+        return missiles;
+    },
+    earnGold : function() {
+        var rooms = [
+            {id : 1, x1:1, y1:1, x2:3, y2:3},
+            {id : 2, x1:1, y1:5, x2:3, y2:7},
+            {id : 3, x1:5, y1:1, x2:7, y2:3},
+            {id : 4, x1:5, y1:5, x2:7, y2:7}
+        ];
+        this.players.forEach(function(player) {
+            var earnedRooms = [];
+            player.units.forEach(function(unit) {
+                rooms.forEach(function(room) {
+                    if (player.id != room.id && Game.isCellInsideRoom(unit.position, room)) {
+                        if (!earnedRooms.contains(room.id)) {
+                            earnedRooms.push(room.id);
+                        }
+                    }
+                });
+            });
+            player.gold += Math.min(earnedRooms.length, 3);
+            console.log('Player ', player.id, ' earned ', Math.min(earnedRooms.length, 3));
+        });
+    },
+    resolveDead : function() {
+        // Check HQ invasion
+        Game.players.forEach(function(looser) {
+            Game.getUnitsOnCell(looser.hq).forEach(function(unit) {
+                if (unit.player.id != looser.id) {
+                    var winner = unit.player;
+                    console.log('Player ', winner.id, ' won over player ', looser.id);
+                    // Transfer units Ownership
+                    for (var i=0 ; i<looser.units.length ; i++) {
+                        winner.createUnit(looser.units[i].type);
+                        looser.units[i].remove();
+                        i--;
+                    }
+                    looser.gameOver = true;
+                }
+            });
+        });
+    },
+    isCellInsideRoom: function(cell, room) {
+        return cell.x >= room.x1 && cell.x <= room.x2 && cell.y >= room.y1 && cell.y <= room.y2;
     }
 });
