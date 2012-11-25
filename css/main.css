@@ -3,6 +3,9 @@
 body {
     font-family : Krungtep, Arial;
     font-size : 15px;
+	background: url(../images/fond.png) top left fixed;
+	background-size: cover;
+	color: #DDD;
 }
 .game {
     position: relative;
@@ -290,15 +293,15 @@ body {
 /* TOP VIEW */
 .top_view .player_name, .top_view .player_power {
     position: absolute;
-    top: 10px;
+    top: 25px;
     left : 20px;
     font-weight: bold;
 }
 
 .top_view .player_power {
     position: absolute;
-    top: 30px;
-    left : 20px;
+    top: 25px;
+    left : 100px;
 }
 
 .top_view .player_buy {
