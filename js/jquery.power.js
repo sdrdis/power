@@ -3,18 +3,24 @@ $.widget("power.power", {
         width: 9,
         height: 9,
         game: null,
-        team: {
-            1: 'chicken',
-            2: 'cow',
-            3: 'pig',
-            4: 'rabbit'
-        },
-        playerNames: {
-            1: 'Player 1',
-            2: 'Player 2',
-            3: 'Player 3',
-            4: 'Player 4'
-        },
+        playersInformations: {
+			1: {
+				team: 'chicken',
+				name: 'Player 1'
+			},
+			2: {
+				team: 'cow',
+				name: 'Player 2'
+			},
+			3: {
+				team: 'pig',
+				name: 'Player 3'
+			},
+			4: {
+				team: 'rabbit',
+				name: 'Player 4'
+			},
+		},
         nbPlayer: 4,
         buyableUnits: ['Soldier', 'Tank', 'JetFighter', 'Destroyer']
     },
@@ -86,7 +92,7 @@ $.widget("power.power", {
         $playerRound.appendTo(this.instances.topView);
         $playerBuy.appendTo(this.instances.topView);
 
-        var playerName = this.options.playerNames[this.playerSelected];
+        var playerName = this.options.playersInformations[this.playerSelected].name;
         $playerName.text(strtr('Player playing: {playerName}', {playerName: playerName}));
         $playerPower.text(strtr('{power} power', {power: this.players[this.playerSelected].getAvailableGold()}));
         $playerRound.append($buttonNext);
@@ -257,7 +263,7 @@ $.widget("power.power", {
                 var unitType = unit.type;
                 var $unit = $('<div class="unit"></div>')
                     .addClass(unitType)
-                    .addClass(this.options.team[unit.player.id]);
+                    .addClass(this.options.playersInformations[unit.player.id].team);
                 $unit.data('unit', unit);
                 $unit.appendTo($gridItem);
 
@@ -312,7 +318,7 @@ $.widget("power.power", {
             var unit = units[i];
             var $unitItem = $('<div class="unit_item"></div>');
             $unitItem.addClass(unit.type)
-                .addClass(this.options.team[unit.player.id]);
+                .addClass(this.options.playersInformations[unit.player.id].team);
             $unitItem.appendTo($unitsList);
             var $unitItemHover = $('<div class="unit_item_hover"></div>');
             $unitItemHover.appendTo($unitItem);
@@ -373,7 +379,6 @@ $.widget("power.power", {
         for (var i = 0; i < this.options.buyableUnits.length; i++) {
             this._displayUnit(
             		this.options.buyableUnits[i],
-            		$buyList,
             		_('Buy'),
             		{},
             		function() {
@@ -381,10 +386,10 @@ $.widget("power.power", {
                         self.refresh();
                         self._showBuyView();
                     }
-    		);
+    		).appendTo($buyList);
         }
         
-        var buyingUnits = this.players[this.playerSelected].getBuyingUnits();
+        var buyingUnits = this.players[this.playerSelected].getBuyingPlanifications();
         
         if (buyingUnits.length > 0) {
 	        var $buyingLabel = $('<div class="buying_label"></div>');
@@ -394,8 +399,7 @@ $.widget("power.power", {
 	        $buyingList.appendTo(this.instances.mainView);
 	        for (var i = 0; i < buyingUnits.length; i++) {
 	        	this._displayUnit(
-	        			buyingUnits[i].unit,
-	        			$buyingList,
+	        			buyingUnits[i].unitType,
 	            		_('Cancel'),
 	            		{planification: buyingUnits[i].planification},
 	            		function() {
@@ -404,17 +408,16 @@ $.widget("power.power", {
 	                        self.refresh();
 	                        self._showBuyView();
 	                    }
-	    		);
+	    		).appendTo($buyingList);
 	        }
         }
     },
     
-    _displayUnit: function(buyableUnit, $appendTo, label, data, callback) {
+    _displayUnit: function(buyableUnit, label, data, callback) {
     	var self = this;
-        var cost = new window[buyableUnit]().power; //@todo: to be improved
+        var cost = window[buyableUnit].cost;
 
         var $item = $('<div class="buy_list_item"></div>');
-        $item.appendTo($appendTo);
         var $item_image = $('<div class="buy_list_item_image"></div>');
         var $item_label = $('<div class="buy_list_item_label"></div>');
         var $item_action_zone = $('<div class="buy_list_item_action_zone"></div>');
@@ -424,7 +427,7 @@ $.widget("power.power", {
 
         $item_image
             .addClass(buyableUnit.toLowerCase())
-            .addClass(this.options.team[this.playerSelected]);
+            .addClass(this.options.playersInformations[this.playerSelected].team);
         $item_label.text(strtr(_('{cost} power'), {cost: cost}));
 
         var $item_button = $('<input type="button" />').val(label);
@@ -432,9 +435,11 @@ $.widget("power.power", {
         $item_button.data('unit', buyableUnit);
         $item_button.data('data', data);
         $item_button.click(callback);
+        return $item;
     },
     
     _showStartingView: function() {
+    	var self = this;
     	this.instances.mainView.html('');
     	var $title = $('<div class="title"></div>');
     	var $description = $('<div class="description"></div>');
@@ -445,7 +450,25 @@ $.widget("power.power", {
     		$description.text(_('You can start playing now'));
     	} else {
     		$title.text(_('Last round orders'));
-    		$description.text(_('Todo'));
+    		for (var key in this.lastPlanifications) {
+    			var $planificationsPlayer = $('<div class="planifications_player"></div>');
+    			var $planificationsPlayerList = $('<div class="planifications_player_list"></div>');
+    			$planificationsPlayer.appendTo($description);
+    			$planificationsPlayerList.appendTo($description);
+    			$planificationsPlayer.text(this.options.playersInformations[key].name);
+    			this.lastPlanifications[key].forEach(function(planification) {
+    				self._showPlanification(planification)
+    					.appendTo($planificationsPlayerList);
+    			});
+    		}
     	}
+    },
+    
+    _showPlanification: function(planification) {
+    	var $item = $('<div class="planification_item"></div>');
+    	if (instanceOf(planification, PlanificationBuy)) {
+    		console.log(planification);
+    	}
+    	return $item;
     }
 });

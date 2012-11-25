@@ -8,4 +8,4 @@ Destroyer = new Class({
         this.evolution = 'BattleCruiser';
     }
 });
-Destroyer.power = 10;
+Destroyer.cost = 10;
