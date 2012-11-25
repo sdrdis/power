@@ -1,35 +1,41 @@
 PlanificationFusion = new Class({
     Extends: Planification,
-    initialize: function(unit) {
+    initialize: function(position, involvedUnits) {
         this.parent();
-        this.unit = unit;
+        this.position = position;
+        this.involvedUnits = involvedUnits;
     },
     isAuthorised: function() {
-        var fusionType = this.unit.type;
+        if (typeof this.involvedUnits[0].evolution == 'undefined') {
+            return false;
+        }
+        var fusionType = this.involvedUnits[0].type;
         var remaining = 3; // How many units of the same type we need for the fusion
-        this.involved = [];
-        var units = this.player.getUnitsAvailableOnCell(this.unit.position);
         var self = this;
-
-        units.forEach(function(unit) {
-            if (unit.type == fusionType && remaining > 0) {
+        
+        this.involvedUnits.forEach(function(unit) {
+            var destination = self.player.getUnitPositionAfterPlanification(unit);
+            if (!self.player.isFusionning(unit) && unit.type == fusionType && destination.x == self.position.x && destination.y == self.position.y) {
                 remaining--;
-                self.involved.push(unit);
             }
         });
-        return remaining == 0;
+        return remaining <= 0;
     },
     resolve: function() {
-        var fusionPosition = this.unit.position;
-        var evolution = this.unit.evolution;
+        var evolution = this.unit[0].evolution;
 
-        this.involved.forEach(function(unit) {
+        this.involvedUnits.forEach(function(unit) {
             unit.remove();
         });
-        this.player.createUnit(evolution, fusionPosition);
+        this.player.createUnit(evolution, this.position);
     },
     isInvolved : function(unit) {
-        // @todo
-        return false;
+        var isInvolved = false;
+        this.involvedUnits.forEach(function(involved) {
+            if (unit.id == involved.id) {
+                isInvolved = true;
+            }
+        });
+        return isInvolved;
     }
 });

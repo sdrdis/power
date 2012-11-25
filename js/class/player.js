@@ -61,74 +61,95 @@ Player = new Class({
             this.addPlanification(planification);
         }
     },
-
-    // FUSION
-    planifyFusion : function(unit) {
-        this.addPlanification(new PlanificationFusion(unit));
+    planifyFusion : function(position, units) {
+        this.addPlanification(new PlanificationFusion(position, units));
     },
-
-    // MISSILE
     planifyMissile : function(position, units) {
         this.addPlanification(new PlanificationMissile(position, units));
     },
-
-    // BUY
     planifyBuy : function(unitType) {
         this.addPlanification(new PlanificationBuy(unitType));
     },
 
-    getUnitsLeavingCell : function(position) {
-        var units = [];
-        this.planifications.forEach(function(p) {
-            if (instanceOf(p, PlanificationMove) && p.unit.position.x == position.x && p.unit.position.y == position.y) {
-                units.push(p.unit);
-            }
-            if (instanceOf(p, PlanificationFusion) || instanceOf(p, PlanificationMissile)) {
-                p.involved.forEach(function(unit) {
-                    units.push(unit);
-                });
-            }
-        });
-        return units;
-    },
-
-    getUnitsIncomingCell : function(position) {
-        var units = [];
-        this.planifications.forEach(function(p) {
-            if (instanceOf(p, PlanificationMove) && p.where.x == position.x && p.where.y == position.y) {
-                units.push(p.unit);
-            }
-        });
-        return units;
-    },
-
-    getUnitsAvailableOnCell : function(position) {
-        var units = this.getUnitsOnCellByState(position);
-        return units.staying.combine(units.incoming);
-    },
-
-    getUnitsOnCellByState: function(position) {
-        var leaving = this.getUnitsLeavingCell(position);
-        var incoming = this.getUnitsIncomingCell(position);
-        var movingIds = [];
-        leaving.forEach(function(unit) {
-            movingIds.push(unit.id);
-        });
-        incoming.forEach(function(unit) {
-            movingIds.push(unit.id);
-        });
-        var self = this;
+    getUnitsStayingCell : function(cell) {
         var staying = [];
+        var self = this;
         this.units.forEach(function(unit) {
-            if (unit.position.x == position.x && unit.position.y == position.y) {
+            var start = unit.position;
+            if (start.x == cell.x && start.y == cell.y && !self.isMoving(unit)) {
                 staying.push(unit);
             }
         });
-        return {
-            'staying' : staying,
-            'incoming' : incoming,
-            'leaving' : leaving
+        return staying;
+    },
+    getUnitsLeavingCell : function(cell) {
+        var leaving = [];
+        var self = this;
+        this.units.forEach(function(unit) {
+            var start = unit.position;
+            if (start.x == cell.x && start.y == cell.y && self.isMoving(unit)) {
+                leaving.push(unit);
+            }
+        });
+        return leaving;
+    },
+    getUnitsIncomingCell : function(cell) {
+        var incoming = [];
+        var self = this;
+        this.units.forEach(function(unit) {
+            var destination = self.getUnitPositionAfterPlanification();
+            if (destination.x == cell.x && destination.y == cell.y && self.isMoving(unit)) {
+                incoming.push(unit);
+            }
+        });
+        return incoming;
+    },
+    getUnitsFusionningCell : function(cell) {
+        var fusionning = [];
+        var self = this;
+        this.units.forEach(function(unit) {
+            var destination = self.getUnitPositionAfterPlanification();
+            if (destination.x == cell.x && destination.y == cell.y && self.isFusionning(unit)) {
+                fusionning.push(unit);
+            }
+        });
+        return fusionning;
+    },
+    getUnitsOnCellByState: function(position) {
+        var states = {
+            'staying' : this.getUnitsStayingCell(position),
+            'incoming' : this.getUnitsIncomingCell(position),
+            'leaving' : this.getUnitsLeavingCell(position),
+            'fusionning' : this.getUnitsFusionningCell(position)
         };
+    },
+    getUnitPositionAfterPlanification : function(unit) {
+        var destination = unit.position;
+        this.planifications.forEach(function(plan) {
+            if (instanceOf(plan, Planificationmove) && plan.unit.id == unit.id) {
+                destination = plan.where;
+            }
+        });
+        return destination;
+    },
+    
+    isMoving : function(unit) {
+        var start = unit.position;
+        var destination = unit.getUnitPositionAfterPlanification();
+        return start.x != destination.x || start.y != destination.y;
+    },
+    
+    isFusionning : function(unit) {
+        var fusionning = false;
+        this.player.planifications.forEach(function(p) {
+            if (instanceOf(p, PlanificationFusion) && p.isInvolved(unit)) {
+                fusionning = true;
+            }
+            if (instanceOf(p, PlanificationMissile) && p.isInvolved(unit)) {
+                fusionning = true;
+            }
+        });
+        return fusionning;
     }
 });
 
