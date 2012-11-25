@@ -180,7 +180,7 @@ Game = new new Class({
                 });
             });
             player.gold += Math.min(earnedRooms.length, 3);
-            console.log('Player ', player.id, ' earned ', Math.min(earnedRooms.length, 3));
+            //console.log('Player ', player.id, ' earned ', Math.min(earnedRooms.length, 3));
         });
     },
     resolveDead : function() {

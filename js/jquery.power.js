@@ -75,8 +75,7 @@ $.widget("power.power", {
     _create: function() {
         var players = this.options.game.players;
         for (var i = 0; i < players.length; i++) {
-            this.players[players[i].id] = players[i];
-            this.players[players[i].id].gold = 200;
+        	this.players[players[i].id] = players[i];
         }
 
         this.instances.map.main = $('<div class="map"></div>');
@@ -127,7 +126,7 @@ $.widget("power.power", {
 
         var playerName = this.options.playersInformations[this.playerSelected].name;
         $playerName.text(strtr('{playerName}', {playerName: playerName}));
-        $playerPower.html(strtr('{power} <img src="images/minipower.png" width="30" height="30" />', {power: this.players[this.playerSelected].getAvailableGold()}));
+        $playerPower.html(strtr('<div>{power}</div> <img src="images/minipower.png" width="30" height="30" />', {power: this.players[this.playerSelected].getAvailableGold()}));
         $playerRound.append($buttonNext);
         $buttonNext.val('Next');
         $buttonNext.click(function() {
@@ -357,8 +356,8 @@ $.widget("power.power", {
         }
         self._refreshDrawZone();
         var $gridItem = this.instances.map.gridItems[position.x][position.y];
-        this.instances.map.grid.find('.grid_item').removeClass('selected');
-        $gridItem.addClass('selected');
+        this.instances.map.touchZone.find('.grid_item').removeClass('selected');
+        $gridItem.data('touch').addClass('selected');
         this._trigger('selectGrid', {position: position});
 
         this.instances.mainView.html('');
@@ -452,6 +451,7 @@ $.widget("power.power", {
         	this.refresh();
             this.unitsSelected[unit.id] = unit;
             this._refreshUnitsView();
+            playSound(unit.type.toLowerCase());
             return true;
         }
         return false;
@@ -512,6 +512,8 @@ $.widget("power.power", {
             		{},
             		function() {
                         self.players[self.playerSelected].planifyBuy($(this).data('unit'));
+                        console.log($(this).data('unit'));
+                        playSound($(this).data('unit').toLowerCase(), true);
                         self.refresh();
                         self._showBuyView();
                     }
