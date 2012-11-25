@@ -5,7 +5,21 @@ PlanificationMove = new Class({
         this.where = where;
     },
     isAuthorised: function() {
-        return this.unit.canMove(this.where);
+
+        if (!this.unit.canMove(this.where)) {
+            return false;
+        }
+        var involvedInFusion = false
+        var self = this;
+        this.player.planifications.forEach(function(p) {
+            if (instanceOf(p, PlanificationFusion) && p.isInvolved(self.unit)) {
+                involvedInFusion = true;
+            }
+            if (instanceOf(p, PlanificationMissile) && p.isInvolved(self.unit)) {
+                involvedInFusion = true;
+            }
+        });
+        return !involvedInFusion;
     },
     resolve: function() {
         this.unit.moveTo(this.where);

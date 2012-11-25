@@ -26,5 +26,9 @@ PlanificationFusion = new Class({
             unit.remove();
         });
         this.player.createUnit(evolution, fusionPosition);
+    },
+    isInvolved : function(unit) {
+        // @todo
+        return false;
     }
 });
