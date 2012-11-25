@@ -102,7 +102,9 @@ $.widget("power.power", {
         var $playerRound = $('<div class="player_round"></div>');
         var $buttonNext = $('<input type="image" src="images/turn.png" width="100" height="100" />');
         var $buttonBuy = $('<input type="image" src="images/buy.png" width="100" height="100" />');
+        var $title = $('<img class="game_title" src="images/titre.png" height="70" />');
 
+        $title.appendTo(this.instances.topView);
         $playerName.appendTo(this.instances.topView);
         $playerPower.appendTo(this.instances.topView);
         $playerRound.appendTo(this.instances.topView);
@@ -458,7 +460,7 @@ $.widget("power.power", {
         	totalPower += self.unitsSelected[key].power;
         	units.push(self.unitsSelected[key]);
         }
-        this.instances.mainView.find('.units_power_selected').text(strtr(_('Total power selected: {totalPower}'), {totalPower: totalPower}));
+        this.instances.mainView.find('.units_power_selected').text(strtr(_('Your selection has a total power of {totalPower}'), {totalPower: totalPower}));
         
         if (units.length == 3) {
 	        var $unitFusion = this.instances.mainView.find('.units_fusion');

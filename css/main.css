@@ -13,12 +13,13 @@ body {
     height: 746px;
     background: url(../images/bordure.png) no-repeat 0 -100px;
     background-size: 100%;
+    margin: 10px auto;
 }
 
 .map {
     position: absolute;
-    width: 600px;
-    height: 600px;
+    width: 606px;
+    height: 606px;
     top: 90px;
     left: 0px;
     z-index : 3;
@@ -41,6 +42,12 @@ body {
     width: 100%;
     overflow: hidden;
     z-index : 1;
+}
+
+.game_title {
+    position: absolute;
+    left: 400px;
+    top: -10px;
 }
 
 /* UNITS */
@@ -279,7 +286,7 @@ body {
 }
 
 .unit_item.selected .unit_item_hover {
-    border: 2px solid black;
+  border: 2px solid #a01e00;
 }
 
 .units_fusion, .units_missile {
@@ -318,7 +325,7 @@ body {
 
 /* BUY ITEM */
 
-.buy_label {
+.buy_label, div.title {
   color : #dbb80a;
   font-weight: bold;
   font-size: 20px;
@@ -367,3 +374,29 @@ body {
 .buy_list_item_action_zone button image {
     vertical-align: middle;
 }
+
+.position {
+    display: none;
+}
+
+
+.planifications_orders, .planifications_events {
+  font-weight: bold;
+  color: #de2a00;
+  margin-top: 15px;
+}
+
+.planifications_player {
+  color : #dbb80a;
+}
+
+.planifications_player_list {
+    padding-left: 15px;
+}
+
+
+
+
+
+
+
