@@ -5,7 +5,7 @@ Player = new Class({
         this.hq = hq;
         this.units = [];
         this.actions = [];
-        this.coins = 0;
+        this.gold = 0;
         this.planifications = [];
     },
     createUnit : function(name, position) {

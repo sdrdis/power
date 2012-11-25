@@ -15,7 +15,8 @@ $.widget("power.power", {
             3: 'Player 3',
             4: 'Player 4'
         },
-        nbPlayer: 4
+        nbPlayer: 4,
+        buyableUnits: ['Soldier', 'Tank', 'JetFighter', 'Destroyer']
     },
     instances: {
         map: {
@@ -37,6 +38,7 @@ $.widget("power.power", {
         var players = this.options.game.players;
         for (var i = 0; i < players.length; i++) {
             this.players[players[i].id] = players[i];
+            this.players[players[i].id].gold = 200;
         }
 
         this.instances.map.main = $('<div class="map"></div>');
@@ -72,19 +74,22 @@ $.widget("power.power", {
         this.instances.topView.html('');
         var $playerName = $('<div class="player_name"></div>');
         var $playerPower = $('<div class="player_power"></div>');
+        var $playerBuy = $('<div class="player_buy"></div>');
         var $playerRound = $('<div class="player_round"></div>');
-        var $button = $('<input type="button" />');
+        var $buttonNext = $('<input type="button" />');
+        var $buttonBuy = $('<input type="button" />');
 
         $playerName.appendTo(this.instances.topView);
         $playerPower.appendTo(this.instances.topView);
         $playerRound.appendTo(this.instances.topView);
+        $playerBuy.appendTo(this.instances.topView);
 
         var playerName = this.options.playerNames[this.playerSelected];
         $playerName.text(strtr('Player playing: {playerName}', {playerName: playerName}));
-        $playerPower.text(strtr('{power} power', {power: this.players[this.playerSelected].coins}));
-        $playerRound.append($button);
-        $button.val('Next');
-        $button.click(function() {
+        $playerPower.text(strtr('{power} power', {power: this.players[this.playerSelected].gold}));
+        $playerRound.append($buttonNext);
+        $buttonNext.val('Next');
+        $buttonNext.click(function() {
             if (self.playerSelected == self.options.nbPlayer) {
                 self.options.game.nextRound();
                 self.playerSelected = 1;
@@ -93,6 +98,12 @@ $.widget("power.power", {
             }
             self.refresh();
         });
+
+        $buttonBuy.val('Buy');
+        $buttonBuy.click(function() {
+            self._showBuyView();
+        });
+        $playerBuy.append($buttonBuy);
     },
 
     _initializeMap: function() {
@@ -337,5 +348,43 @@ $.widget("power.power", {
 
     _trigger: function(name, params) {
         return this.element.trigger(name, params);
+    },
+
+    _showBuyView: function() {
+        var self = this;
+        this.instances.mainView.html('');
+        var $buy = $('<div class="buy"></div>');
+        $buy.appendTo(this.instances.mainView);
+        var $buyLabel = $('<div class="buy_label"></div>');
+        var $buyList = $('<div class="buy_list"></div>');
+        $buyLabel.appendTo(this.instances.mainView);
+        $buyList.appendTo(this.instances.mainView);
+
+        $buyLabel.text(_('Buy units'));
+        for (var i = 0; i < this.options.buyableUnits.length; i++) {
+            var buyableUnit = this.options.buyableUnits[i];
+            var cost = new window[buyableUnit]().power; //@todo: to be improved
+
+            var $item = $('<div class="buy_list_item"></div>');
+            $item.appendTo($buyList);
+            var $item_image = $('<div class="buy_list_item_image"></div>');
+            var $item_label = $('<div class="buy_list_item_label"></div>');
+            var $item_action_zone = $('<div class="buy_list_item_action_zone"></div>');
+            $item_image.appendTo($item);
+            $item_label.appendTo($item);
+            $item_action_zone.appendTo($item);
+
+            $item_image
+                .addClass(buyableUnit.toLowerCase())
+                .addClass(this.options.team[this.playerSelected]);
+            $item_label.text(strtr(_('{cost} power'), {cost: cost}));
+
+            var $item_button = $('<input type="button" />').val(_('Buy'));
+            $item_button.appendTo($item_action_zone);
+            $item_button.data('unit', buyableUnit);
+            $item_button.click(function() {
+                self.players[self.playerSelected].planifyBuy($(this).data('unit'));
+            });
+        }
     }
 });

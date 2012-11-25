@@ -6,7 +6,7 @@ PlanificationBuy = new Class({
     isAuthorised: function() {
         var availableGold = this.player.gold;
         // Check previous buyings
-        this.player.planifications.foreach(function(planification) {
+        this.player.planifications.forEach(function(planification) {
             if (planification[0] == 'buy') {
                 availableGold -= window[planification[1]]['cost'];
             }
