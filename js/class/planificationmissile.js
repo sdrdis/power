@@ -1,6 +1,7 @@
 PlanificationMissile = new Class({
     Extends: Planification,
     initialize: function(position, units) {
+        this.parent();
         this.position = position;
         this.units = units;
     },
