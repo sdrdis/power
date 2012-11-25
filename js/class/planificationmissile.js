@@ -4,7 +4,7 @@ PlanificationMissile = new Class({
         this.parent();
         this.type = 'Missile';
         this.position = position;
-        this.c = involvedUnits;
+        this.involvedUnits = involvedUnits;
     },
     isAuthorised: function() {
         var neededPower = 100;
@@ -18,7 +18,7 @@ PlanificationMissile = new Class({
         return neededPower <= 0;
     },
     resolve: function() {
-        this.involved.forEach(function(unit) {
+        this.involvedUnits.forEach(function(unit) {
             unit.remove();
         });
         this.player.createUnit('Missile', this.position);

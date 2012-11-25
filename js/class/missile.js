@@ -3,7 +3,8 @@ Missile = new Class({
     initialize: function(position) {
         this.parent(position);
         this.type = 'Missile';
+        this.category = 'ground';
         this.power = 1000;
-        this.movement = 0;
+        this.movement = 10;
     }
 });
