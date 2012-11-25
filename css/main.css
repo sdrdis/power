@@ -18,8 +18,8 @@ body {
 
 .map {
     position: absolute;
-    width: 600px;
-    height: 600px;
+    width: 606px;
+    height: 606px;
     top: 90px;
     left: 0px;
     z-index : 3;
@@ -325,7 +325,7 @@ body {
 
 /* BUY ITEM */
 
-.buy_label {
+.buy_label, div.title {
   color : #dbb80a;
   font-weight: bold;
   font-size: 20px;
@@ -380,7 +380,19 @@ body {
 }
 
 
+.planifications_orders, .planifications_events {
+  font-weight: bold;
+  color: #de2a00;
+  margin-top: 15px;
+}
 
+.planifications_player {
+  color : #dbb80a;
+}
+
+.planifications_player_list {
+    padding-left: 15px;
+}
 
 
 
