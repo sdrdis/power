@@ -142,7 +142,7 @@ $.widget("power.power", {
         $playerRound.append($buttonNext);
         $buttonNext.val('Next');
         $buttonNext.click(function() {
-            if (self.playerSelected == self.options.nbPlayer) {
+            if (self.playerSelected == 3) {
             	self.lastPlanifications = {};
             	for (var key in self.players) {
             		self.lastPlanifications[key] = [];
