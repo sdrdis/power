@@ -269,11 +269,11 @@
     border: 2px solid black;
 }
 
-.units_fusion {
+.units_fusion, .units_missile {
 	display: none;
 }
 
-.units_fusion.active {
+.units_fusion.active, .units_missile.active {
 	display: block;
 }
 
