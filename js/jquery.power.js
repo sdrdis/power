@@ -351,39 +351,48 @@ $.widget("power.power", {
         $position.appendTo($gridItemView);
         $position.text(strtr(_('Cell selected: {x}, {y}'), position));
 
-        //var unitsByKey = this.players[this.playerSelected].getUnitsOnCellByState(position);
+        var unitsByKey = this.players[this.playerSelected].getUnitsOnCellByState(position);
 
         var $units = $('<div class="units"></div>');
         
         var $unitsPowerSelected = $('<div class="units_power_selected"></div>');
         var $unitsFusion = $('<div class="units_fusion"></div>');
         
-        //for (var key in unitsByKey) {
-        	var units = this.options.game.getUnitsOnMap();// unitsByKey[key];
-        	var $unitsLabel = $('<div class="units_label"></div>');
-            var $unitsList = $('<div class="units_list"></div>');
-            $unitsLabel.appendTo($units);
-            $unitsPowerSelected.appendTo($units);
-            $unitsFusion.appendTo($units);
-            $unitsList.appendTo($units);
-            $units.appendTo($gridItemView);
-            $unitsLabel.text(strtr(_('{nb} unit(s) on this cell'), {nb: units.length}));
-            for (var i = 0; i < units.length; i++) {
-                var unit = units[i];
-                var $unitItem = $('<div class="unit_item"></div>');
-                $unitItem.addClass(unit.type.toLowerCase())
-                    .addClass(this.options.playersInformations[unit.player.id].team);
-                $unitItem.appendTo($unitsList);
-                var $unitItemHover = $('<div class="unit_item_hover"></div>');
-                $unitItemHover.appendTo($unitItem);
-                $unitItem.data('unit', unit);
-
-                $unitItem.click(function() {
-                    var $this = $(this);
-                    self.switchSelectUnit($this.data('unit'));
-                });
-            }
-        //}
+        var labelsByKey = {
+			staying: _('on this cell'),
+			incoming: _(' coming to this cell'),
+			leaving: _(' leaving this cell'),
+			fusionning: _(' fusionning'),
+        };
+       
+        for (var key in unitsByKey) {
+        	var units = unitsByKey[key];
+        	if (units.length > 0) {
+	        	var $unitsLabel = $('<div class="units_label"></div>');
+	            var $unitsList = $('<div class="units_list"></div>');
+	            $unitsLabel.appendTo($units);
+	            $unitsPowerSelected.appendTo($units);
+	            $unitsFusion.appendTo($units);
+	            $unitsList.appendTo($units);
+	            $units.appendTo($gridItemView);
+	            $unitsLabel.text(strtr(_('{nb} unit(s) {label}'), {nb: units.length, label: labelsByKey[key]}));
+	            for (var i = 0; i < units.length; i++) {
+	                var unit = units[i];
+	                var $unitItem = $('<div class="unit_item"></div>');
+	                $unitItem.addClass(unit.type.toLowerCase())
+	                    .addClass(this.options.playersInformations[unit.player.id].team);
+	                $unitItem.appendTo($unitsList);
+	                var $unitItemHover = $('<div class="unit_item_hover"></div>');
+	                $unitItemHover.appendTo($unitItem);
+	                $unitItem.data('unit', unit);
+	
+	                $unitItem.click(function() {
+	                    var $this = $(this);
+	                    self.switchSelectUnit($this.data('unit'));
+	                });
+	            }
+        	}
+        }
         
         
         
