@@ -144,7 +144,7 @@ $.widget("power.power", {
             			
             		});
             	}
-                this.lastEvents = self.options.game.nextRound();
+                self.lastEvents = self.options.game.nextRound();
                 self.playerSelected = 1;
             } else {
                 self.playerSelected++;
@@ -561,7 +561,10 @@ $.widget("power.power", {
     		$title.text(_('First round'));
     		$description.text(_('You can start playing now'));
     	} else {
-    		$title.text(_('Last round orders'));
+    		$title.text(_('Last round summary'));
+    		var $planificationsOrders = $('<div class="planifications_orders"></div>');
+    		$planificationsOrders.text(_('Orders'));
+    		$planificationsOrders.appendTo($description);
     		for (var key in this.lastPlanifications) {
     			var $planificationsPlayer = $('<div class="planifications_player"></div>');
     			var $planificationsPlayerList = $('<div class="planifications_player_list"></div>');
@@ -573,6 +576,33 @@ $.widget("power.power", {
     					.appendTo($planificationsPlayerList);
     			});
     		}
+    		var $planificationsEvents = $('<div class="planifications_events"></div>');
+    		$planificationsEvents.text(_('Events'));
+    		$planificationsEvents.appendTo($description);
+    		
+    		$.each(this.lastEvents.fights, function(key, fight) {
+    			var fight = this.lastEvents.fights[key];
+    			var $planificationsFight = $('<div class="planifications_fight"></div>');
+    			var playerIds = [];
+    			for (var key in fight.scores) {
+    				playerIds.push(key);
+    			}
+    			console.log(fight);
+    			$planificationsFight.text(strtr(
+    					_('Fight on [{x}, {y}] between {player1} ({score1}) and {player2} ({score2})'),
+    					{
+    						x: fight.position.x,
+    						y: fight.position.y,
+    						player1: this.options.playersInformations[playerIds[0]],
+    						score1: fight.scores[playerIds[0]],
+    						player2: this.options.playersInformations[playerIds[1]],
+    						score2: fight.scores[playerIds[1]]
+    					}
+					)
+    			);
+    			$planificationsFight.appendTo($description);
+    		});
+    			
     		
     		console.log(this.lastEvents);
     	}
