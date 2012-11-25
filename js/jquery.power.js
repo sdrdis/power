@@ -54,6 +54,7 @@ $.widget("power.power", {
     players: {},
     preSelectedUnit: null,
     lastPlanifications: null,
+    lastSelectedPosition: null,
 
     _create: function() {
         var players = this.options.game.players;
@@ -122,11 +123,21 @@ $.widget("power.power", {
             			if (planification.unit) {
             				planification.unit.player = null;
             			}
+            			if (planification.involvedUnits) {
+            				for (var i = 0; i < planification.involvedUnits.length; i++) {
+            					planification.involvedUnits[i].player = null;
+            				}
+            			}
             			var clonedPlanification = Object.clone(planification);
             			clonedPlanification.player = tempPlayer;
             			planification.player = tempPlayer;
             			if (planification.unit) {
             				planification.unit.player = tempPlayer;
+            			}
+            			if (planification.involvedUnits) {
+            				for (var i = 0; i < planification.involvedUnits.length; i++) {
+            					planification.involvedUnits[i].player = tempPlayer;
+            				}
             			}
             			self.lastPlanifications[key].push(clonedPlanification);
             			
@@ -280,11 +291,13 @@ $.widget("power.power", {
                 .removeClass('unit_display_1')
                 .removeClass('unit_display_2')
                 .removeClass('unit_display_3')
+                .removeClass('unit_display_4')
                 .addClass(unitDisplayClass);
             $gridTouchItem
                 .removeClass('unit_display_1')
                 .removeClass('unit_display_2')
                 .removeClass('unit_display_3')
+                .removeClass('unit_display_4')
                 .addClass(unitDisplayClass);
             for (var j = 0; j < unitsList.length; j++) {
                 var unit = unitsList[j];
@@ -312,6 +325,7 @@ $.widget("power.power", {
     },
 
     selectGridItem: function(position) {
+    	this.lastSelectedPosition = position;
         var self = this;
         if (this.unitsSelected) {
             for (var key in this.unitsSelected) {
@@ -341,8 +355,12 @@ $.widget("power.power", {
 
         var $units = $('<div class="units"></div>');
         var $unitsLabel = $('<div class="units_label"></div>');
+        var $unitsPowerSelected = $('<div class="units_power_selected"></div>');
+        var $unitsFusion = $('<div class="units_fusion"></div>');
         var $unitsList = $('<div class="units_list"></div>');
         $unitsLabel.appendTo($units);
+        $unitsPowerSelected.appendTo($units);
+        $unitsFusion.appendTo($units);
         $unitsList.appendTo($units);
         $units.appendTo($gridItemView);
         $unitsLabel.text(strtr(_('There is {nb} unit(s) on this cell'), {nb: units.length}));
@@ -361,6 +379,18 @@ $.widget("power.power", {
                 self.switchSelectUnit($this.data('unit'));
             });
         }
+        
+        var $fusionButton = $('<input type="button" />');
+        $fusionButton.appendTo($unitsFusion);
+        $fusionButton.val(_('Fusion'));
+        $fusionButton.click(function() {
+        	var units = [];
+        	for (var key in self.unitsSelected) {
+            	units.push(self.unitsSelected[key]);
+            }
+        	self.players[self.playerSelected].planifyFusion(self.lastSelectedPosition, units);
+        });
+        
         this._refreshUnitsView();
     },
 
@@ -390,6 +420,16 @@ $.widget("power.power", {
             var $this = $(this);
             self.unitsSelected[$this.data('unit').id] ? $this.addClass('selected') : $this.removeClass('selected');
         });
+        var totalPower = 0;
+        var units = [];
+        for (var key in self.unitsSelected) {
+        	totalPower += self.unitsSelected[key].power;
+        	units.push(self.unitsSelected[key]);
+        }
+        this.instances.mainView.find('.units_power_selected').text(strtr(_('Total power selected: {totalPower}'), {totalPower: totalPower}));
+        
+        var $unitFusion = this.instances.mainView.find('.units_fusion');
+        this.players[this.playerSelected].canFusion(this.lastSelectedPosition, units) ? $unitFusion.addClass('active') : $unitFusion.removeClass('active');
     },
 
     _trigger: function(name, params) {
@@ -491,7 +531,6 @@ $.widget("power.power", {
     			$planificationsPlayer.appendTo($description);
     			$planificationsPlayerList.appendTo($description);
     			$planificationsPlayer.text(this.options.playersInformations[key].name);
-    			console.log(this.lastPlanifications[key]);
     			this.lastPlanifications[key].forEach(function(planification) {
     				self._showPlanification(planification)
     					.appendTo($planificationsPlayerList);
@@ -513,6 +552,13 @@ $.widget("power.power", {
     			fromY: planification.unit.position.y,
     			toX: planification.where.x,
     			toY: planification.where.y,
+    		}));
+    	}
+    	if (instanceOf(planification, PlanificationFusion)) {
+    		$item.text(strtr(_('Merge 3 {unitType}s on [{x}, {y}]'), {
+    			unitType: this._getUnitTypeLabel(planification.involvedUnits[0].type),
+    			x: planification.involvedUnits[0].position.x,
+    			y: planification.involvedUnits[0].position.y,
     		}));
     	}
     	return $item;

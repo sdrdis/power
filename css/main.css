@@ -265,6 +265,14 @@
     border: 2px solid black;
 }
 
+.units_fusion {
+	display: none;
+}
+
+.units_fusion.active {
+	display: block;
+}
+
 /* TOP VIEW */
 .top_view .player_name, .top_view .player_power {
     float: left;
