@@ -20,9 +20,9 @@ Certes il n'est pas encore intégré dans le jeu, mais Kevin nous a fait un si j
 
 Au départ, chaque joueur commence dans un coin de la carte.
 
-Le joueur peut cliquer sur les cases pour visualiser en détails les unités présentes.
+Le joueur peut cliquer sur les cases pour visualiser en détail les unités présentes.
 
-Si on clique dans le camps des lapins (en haut à gauche), on peut voir à droite que ce camps dispose de deux lapins-soldats, deux tanks, deux avions, deux bateaux.
+Si on clique dans la base des lapins (en haut à gauche), on peut voir à droite que cette base dispose de deux lapins-soldats, deux tanks, deux avions, deux bateaux.
 
 ## Déplacement d'unités
 
