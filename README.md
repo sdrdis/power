@@ -28,4 +28,4 @@ Si on clique dans le camps des lapins (en haut à gauche), on peut voir à droit
 
 ![Déplacement d'unités](http://sdrdis.github.com/power/screenshots/moving.png)
 
-Le joueur peut biensûr déplacer ces unités (sinon le jeu n'aurait pas trop d'intérêt). Il peut donc sélectionner ses unités pour les déplacer dans la carte.
+Le joueur peut biensûr déplacer ces unités (sinon le jeu n'aurait pas trop d'intérêt). Ici, le joueur a sélectionné un de ses lapins-soldats pour les déplacement au centre de son champs de carottes.
