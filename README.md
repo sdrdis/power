@@ -46,3 +46,12 @@ C'est le groupe d'unités qui cumule le plus de force qui gagne. Le gagnant conv
 
 ![Achats](http://sdrdis.github.com/power/screenshots/buy.png)
 
+Chaque joueur gagne des crédits (que l'on appelle power) en positionnant ses unités dans les camps adverses.
+
+Ces powers, il peut alors les dépenser pour acheter de nouvelles unités.
+
+## Amélioration des unités
+
+![Amélioration des unités](http://sdrdis.github.com/power/screenshots/illustrations.jpg)
+
+En fusionnant plusieurs unités, il est parfois possible de se retrouver avec des unités plus puissantes. Par exemple, si l'on fusionne plusieurs poulets soldats entre eux, grâce aux OGMs, on se retrouve avec un super-poulet-soldat beaucoup plus puissant.
