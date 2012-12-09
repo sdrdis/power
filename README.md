@@ -28,11 +28,11 @@ Si on clique dans la base des lapins (en haut à gauche), on peut voir à droite
 
 ![Déplacement d'unités](http://sdrdis.github.com/power/screenshots/moving.png)
 
-Le joueur peut biensûr déplacer ces unités (sinon le jeu n'aurait pas trop d'intérêt). Ici, le joueur a sélectionné un de ses lapins-soldats pour les déplacement au centre de son champs de carottes.
+Le joueur peut biensûr déplacer ces unités (sinon le jeu n'aurait pas trop d'intérêt). Ici, le joueur a sélectionné un de ses lapins-soldats pour les déplacer au centre de son champ de carottes.
 
 ![Multiples déplacement](http://sdrdis.github.com/power/screenshots/multiple%20move.png)
 
-Le joueur peut bouger plusieurs unités à la fois. Ici, le camp des poulets a déplacé un poulet-soldat et un tank dans son enclot.
+Le joueur peut bouger plusieurs unités à la fois. Ici, le camp des poulets a déplacé un poulet-soldat et un tank dans son enclos.
 
 ## Combats
 
@@ -54,4 +54,17 @@ Ces powers, il peut alors les dépenser pour acheter de nouvelles unités.
 
 ![Amélioration des unités](http://sdrdis.github.com/power/screenshots/illustrations.jpg)
 
-En fusionnant plusieurs unités, il est parfois possible de se retrouver avec des unités plus puissantes. Par exemple, si l'on fusionne plusieurs poulets soldats entre eux, grâce aux OGMs, on se retrouve avec un super-poulet-soldat beaucoup plus puissant.
+En fusionnant plusieurs unités, il est parfois possible de se retrouver avec des unités plus puissantes. Par exemple, si l'on fusionne 3 poulets soldats entre eux, grâce aux OGMs, on se retrouve avec un super-poulet-soldat génétiquement modifié beaucoup plus puissant.
+
+# L'équipe
+
+* <b>Julian Espérat</b>, porteur de projet et programmation
+* <b>Adam Rousselle</b>, son et un peu de programmation
+* <b>Kevin Kerisit</b> pour les graphismes
+* <b>Sébastien Drouyer</b>, programmation
+
+# Licence
+
+Le code est sous licence MIT.
+
+Le son ainsi que les images sont sous licence [Create Common CC BY-NC-ND 2.0 FR](http://creativecommons.org/licenses/by-nc-nd/2.0/fr/)
