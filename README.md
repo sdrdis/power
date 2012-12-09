@@ -29,3 +29,20 @@ Si on clique dans le camps des lapins (en haut à gauche), on peut voir à droit
 ![Déplacement d'unités](http://sdrdis.github.com/power/screenshots/moving.png)
 
 Le joueur peut biensûr déplacer ces unités (sinon le jeu n'aurait pas trop d'intérêt). Ici, le joueur a sélectionné un de ses lapins-soldats pour les déplacement au centre de son champs de carottes.
+
+![Multiples déplacement](http://sdrdis.github.com/power/screenshots/multiple%20move.png)
+
+Le joueur peut bouger plusieurs unités à la fois. Ici, le camp des poulets a déplacé un poulet-soldat et un tank dans son enclot.
+
+## Combats
+
+![Combats](http://sdrdis.github.com/power/screenshots/combat.png)
+
+En fin de tour, quand des unités de camps adverses se retrouvent sur la même case, elles livrent bataille.
+
+C'est le groupe d'unités qui cumule le plus de force qui gagne. Le gagnant convertit alors les unités du perdant et peut les réutiliser plus tard (rien ne se perd dans la ferme :)).
+
+## Achats
+
+![Achats](http://sdrdis.github.com/power/screenshots/buy.png)
+
