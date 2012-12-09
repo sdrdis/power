@@ -18,9 +18,14 @@ Certes il n'est pas encore intégré dans le jeu, mais Kevin nous a fait un si j
 
 ![Le début](http://sdrdis.github.com/power/screenshots/start.png)
 
-Au départ, chaque joueur commencent dans un coin de la carte.
+Au départ, chaque joueur commence dans un coin de la carte.
 
 Le joueur peut cliquer sur les cases pour visualiser en détails les unités présentes.
 
 Si on clique dans le camps des lapins (en haut à gauche), on peut voir à droite que ce camps dispose de deux lapins-soldats, deux tanks, deux avions, deux bateaux.
 
+## Déplacement d'unités
+
+![Déplacement d'unités](http://sdrdis.github.com/power/screenshots/moving.png)
+
+Le joueur peut biensûr déplacer ces unités (sinon le jeu n'aurait pas trop d'intérêt). Il peut donc sélectionner ses unités pour les déplacer dans la carte.
