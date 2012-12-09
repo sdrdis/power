@@ -6,4 +6,9 @@ En un mot, plusieurs joueurs (entre 2 et 4) sont positionnés dans les coins de 
 
 # Screenshots
 
+## Le menu
+
 ![Menu](http://sdrdis.github.com/power/screenshots/menu.jpg)
+
+Certes il n'est pas encore intégré dans le jeu, mais Kevin nous a fait un si joli boulot qu'on a eu envie de vous le montrer quand même :).
+
