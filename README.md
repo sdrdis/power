@@ -6,3 +6,4 @@ En un mot, plusieurs joueurs (entre 2 et 4) sont positionnés dans les coins de 
 
 # Screenshots
 
+![Menu](http://sdrdis.github.com/power/screenshots/menu.jpg)
