@@ -4,7 +4,7 @@ Power est un jeu de société de type stratégie en tour par tour où on fait la
 
 En un mot, plusieurs joueurs (entre 2 et 4) sont positionnés dans les coins de la carte. Chaque joueur dispose depuis le départ d'unités de divers types (terrestres, aériennes, marines). Chaque unités a ses propres caractéristiques de déplacement, de combats etc... Le but de chaque joueur est d'utiliser judicieusement leurs unités pour anéantir les autres joueurs.
 
-On avait envie de faire quelque chose d'original, donc on a un peu transformer le concept. Dans notre version, chaque joueur représente un animal de la ferme (lapins, poulets, cochons et vaches). Chacun se battent à armes égales pour le contrôle de la ferme.
+On avait envie de faire quelque chose d'original, donc on a un peu transformé le concept. Dans notre version, chaque joueur représente un animal de la ferme (lapins, poulets, cochons et vaches). Chacun se battent à armes égales pour le contrôle de la ferme.
 
 # Screenshots
 
